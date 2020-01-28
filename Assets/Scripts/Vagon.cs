@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine;
 using TMPro;
 
 public class Vagon : MonoBehaviour
@@ -11,10 +12,9 @@ public class Vagon : MonoBehaviour
     public GameObject hitObject;
     private GameObject spawnerHitObject;
 
-    public GameObject gridObject;
     public Material gridMaterial;
 
-    public GameObject debugGridHolder;
+    private GameObject gridsHolder;
 
     public GameObject centerPivot;
 
@@ -48,17 +48,15 @@ public class Vagon : MonoBehaviour
         vagonCollider.radius = radius;
         vagonCollider.height = length + (radius * 2.0f);
 
-        gridObject.transform.localScale = new Vector3(segmentsAmmount / 3.14f, segmentsAmmount / 3.14f, rowsAmmount);
-        gridObject.transform.localRotation = Quaternion.Euler(90, 90 + (180/segmentsAmmount), 0);
         gridMaterial.SetVector("_dimensions", new Vector4(segmentsAmmount, rowsAmmount, 0, 0 ));
 
-        GridsDrawRequest();
+        GridsReDrawRequest();
     }
 
     /// <summary>
-    /// Method to draws both grids
+    /// Method to draw grids
     /// </summary>
-    private void GridsDrawRequest()
+    private void GridsReDrawRequest()
     {
         foreach (BuildingSystem.VagonGrid grid in Grids)
         {
@@ -88,26 +86,21 @@ public class Vagon : MonoBehaviour
                 break;
         }
 
-        grid.grid = new BuildingSystem.GridCell[rows,SegmentsAmmount]; //creating a new 2d array to store all virtual grid cells
+        grid.grid = new BuildingSystem.GridCell[rows,SegmentsAmmount]; //creating a new 2d array to store all grid cells
 
         if (!grid.parentObject) //checking if the parent object is set
             {
-                if (!debugGridHolder)
+                if (!(gridsHolder = gameObject.transform.Find("DebugGrid").gameObject))
                 {
-                    if (!(debugGridHolder = gameObject.transform.Find("DebugGrid").gameObject)) debugGridHolder = Instantiate(new GameObject("DebugGrid"), gameObject.transform); //if couldn't find an existing object, create a new one
+                    gridsHolder = Instantiate(new GameObject("DebugGrid"), gameObject.transform); //if couldn't find an existing object, create a new one
                 }
-                grid.parentObject = Instantiate(new GameObject(grid.gridName + "DebugGridHolder"), debugGridHolder.transform);
+                grid.parentObject = Instantiate(new GameObject(grid.gridName + "DebugGridHolder"), gridsHolder.transform);
             }
-
-            grid.debugGrid = new BuildingSystem.DebugGridRow[rows]; //initialising the rows array
-
+        
         for (int i = 0; i < rows; i++) 
         {
-            grid.debugGrid[i] = new BuildingSystem.DebugGridRow { debugCellsArray = new BuildingSystem.GridCell[SegmentsAmmount] };
-
             for (int j = 0; j < SegmentsAmmount; j++)
             {
-                grid.debugGrid[i].debugCellsArray[j] = new BuildingSystem.GridCell(); //creating an empty cell object
 
                 float angle = (j * Mathf.PI * 2 / SegmentsAmmount); //angle in radians
 
@@ -133,39 +126,30 @@ public class Vagon : MonoBehaviour
 
                 grid.grid[i, j] = new BuildingSystem.GridCell
                 {
+                    parentGrid = grid,
                     coordinates = new Vector2(i, j), //storing cell coordinates
                     cellCenter = cellCenterTemp,
                     parent = grid.parentObject.transform,
                     isOccupied = false
                 };
+                
+                GameObject cellGizmo = Instantiate(grid.cellObject, grid.parentObject.transform); //storing the debug grid cell we are working on right now
+                grid.grid[i, j].cellGizmo = cellGizmo; //assigning the gizmo object to it's cell object
 
-                if (DebugIsOn)
-                {
-                    BuildingSystem.GridCell debugGridCell = grid.debugGrid[i].debugCellsArray[j]; //storing the debug grid cell we are working on right now
-                    debugGridCell.cellDebugGizmo = Instantiate(grid.cellObject, grid.parentObject.transform);
-                    debugGridCell.cellDebugGizmo.transform.localPosition = cellCenterTemp;
+                cellGizmo.transform.localPosition = cellCenterTemp;
 
-                    if (grid.gridType == BuildingSystem.GridType.edge) debugGridCell.cellDebugGizmo.transform.rotation = i % 2 == 0 ? Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)) : Quaternion.Euler(new Vector3(0, 90, -angle * 180 / Mathf.PI)); //spawning roads with different rotation depending on the row
-                    else debugGridCell.cellDebugGizmo.transform.rotation = Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)); //rotating buildings
+                if (grid.gridType == BuildingSystem.GridType.edge) cellGizmo.transform.rotation = i % 2 == 0 ? Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)) : Quaternion.Euler(new Vector3(0, 90, -angle * 180 / Mathf.PI)); //spawning roads with different rotation depending on the row
+                else cellGizmo.transform.rotation = Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)); //rotating buildings
 
-                    debugGridCell.cellDebugGizmo.name = grid.gridName + " [" + i + "][" + j + "]"; //(difference)
-                }
+                cellGizmo.name = grid.gridName + " [" + i + "][" + j + "]";
+                
             }
         }
     }
 
     public void EraseGrid(BuildingSystem.VagonGrid grid)
     {
-        if (grid.debugGrid != null && grid.debugGrid.Length >= 0)
-        {
-            for (int i = 0; i < grid.debugGrid.Length; i++)
-            {
-                for (int j = 0; j < grid.debugGrid[i].debugCellsArray.Length; j++)
-                {
-                    if (grid.debugGrid[i].debugCellsArray[j].cellDebugGizmo) DestroyImmediate(grid.debugGrid[i].debugCellsArray[j].cellDebugGizmo);
-                }
-            }
-        }
+       DestroyImmediate(grid.parentObject);
     }
 }
 

@@ -9,13 +9,27 @@ public class BuildingSystem : MonoBehaviour
 
     public enum GridType { main, edge, edgeCross }
 
-    [System.Serializable] public class GridCell { public GridType gridType; public GameObject cellDebugGizmo; public Vector3 cellCenter; public Transform parent; public bool isOccupied; public Vector2 coordinates; public GridBuilding building; } //a class to contain infromation about cells
-    [System.Serializable] public class DebugGridRow { public GridCell[] debugCellsArray; }
+    [System.Serializable] public class GridCell {
+        public VagonGrid parentGrid; //store parentgrid of the cell
+        public Vector2 coordinates;
+        public GameObject cellGizmo; //associated gizmo object
+        public Vector3 cellCenter; //transform of the cell regarding to the Vagon body
+        public Transform parent; 
+        public bool isOccupied;
+        public GridBuilding building; //reference to the building that is built on this cel        
+    } //a class to contain infromation about cells
 
     /// <summary>
     /// Class to hold information about an entire grid
     /// </summary>
-    [System.Serializable] public class VagonGrid { public string gridName; public GridType gridType; public bool isEnabledForThisVagon = true;  public DebugGridRow[] debugGrid; public GameObject parentObject; public GameObject cellObject; public GridCell[,] grid; }
+    [System.Serializable] public class VagonGrid {
+        private Vagon parentVagon; //store a link to the parent vagon script
+        public string gridName; 
+        public GridType gridType;
+        public GameObject parentObject; //game object to store all drid objects in for organisation
+        public GameObject cellObject; //place to store a prefab for this grid
+        public GridCell[,] grid; //2d array used to store grid cells
+    }
 
     public static List<Vagon> allVagons = new List<Vagon>();
 
@@ -34,7 +48,8 @@ public class BuildingSystem : MonoBehaviour
         {                
             CapsuleCollider colCollider = (CapsuleCollider)hit.collider;
             Vagon hitVagon = hit.transform.gameObject.GetComponent<Vagon>();
-            Material hitGridMaterial = hitVagon.gridMaterial;
+
+            Material hitGridMaterial = hitVagon.gridMaterial; //old highlight implementation with a shader
 
             VagonGrid targetGrid = null;
 
