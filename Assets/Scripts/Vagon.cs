@@ -1,14 +1,8 @@
 ﻿using UnityEngine;
-using UnityEngine;
 using TMPro;
 
 public class Vagon : MonoBehaviour
 {
-    /// <summary>
-    /// If on, enables 3d gizmos in editor
-    /// </summary>
-    [SerializeField] private bool debugIsOn = false; public bool DebugIsOn { get => debugIsOn; set => debugIsOn = value; }
-
     public GameObject hitObject;
     private GameObject spawnerHitObject;
 
@@ -58,6 +52,12 @@ public class Vagon : MonoBehaviour
     /// </summary>
     private void GridsReDrawRequest()
     {
+        if (gridsHolder == null)
+        {
+            gridsHolder = new GameObject("GridObjects Holder"); //if couldn't find an existing object, create a new one
+            gridsHolder.transform.parent = gameObject.transform;
+        }
+
         foreach (BuildingSystem.VagonGrid grid in Grids)
         {
             EraseGrid(grid); //erasing old grids
@@ -73,7 +73,7 @@ public class Vagon : MonoBehaviour
     {
         int rows = 0;
         
-        switch (grid.gridType) //calculating row ammounts for
+        switch (grid.gridType) //calculating row ammounts for this type of grid
         {
             case BuildingSystem.GridType.main:
                 rows = RowsAmmount;
@@ -86,17 +86,14 @@ public class Vagon : MonoBehaviour
                 break;
         }
 
-        grid.grid = new BuildingSystem.GridCell[rows,SegmentsAmmount]; //creating a new 2d array to store all grid cells
+        grid.grid = new BuildingSystem.GridCell[rows,SegmentsAmmount]; //creating a new 2d array to store all grid cells of this grid
 
-        if (!grid.parentObject) //checking if the parent object is set
-            {
-                if (!(gridsHolder = gameObject.transform.Find("DebugGrid").gameObject))
-                {
-                    gridsHolder = Instantiate(new GameObject("DebugGrid"), gameObject.transform); //if couldn't find an existing object, create a new one
-                }
-                grid.parentObject = Instantiate(new GameObject(grid.gridName + "DebugGridHolder"), gridsHolder.transform);
-            }
-        
+        if (grid.parentObject == null)
+        {
+            grid.parentObject = new GameObject(grid.gridName + "GridObjects Holder");
+            grid.parentObject.transform.parent = gridsHolder.transform;
+        }
+
         for (int i = 0; i < rows; i++) 
         {
             for (int j = 0; j < SegmentsAmmount; j++)
@@ -122,7 +119,7 @@ public class Vagon : MonoBehaviour
                         break;
                 }
 
-                Vector3 cellCenterTemp = new Vector3(-Mathf.Cos(angle), yOffset / Radius, -Mathf.Sin(angle)) * Radius;
+                Vector3 cellCenterTemp = new Vector3(yOffset / Radius, -Mathf.Sin(angle), -Mathf.Cos(angle)) * Radius;
 
                 grid.grid[i, j] = new BuildingSystem.GridCell
                 {
@@ -139,7 +136,7 @@ public class Vagon : MonoBehaviour
                 cellGizmo.transform.localPosition = cellCenterTemp;
 
                 if (grid.gridType == BuildingSystem.GridType.edge) cellGizmo.transform.rotation = i % 2 == 0 ? Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)) : Quaternion.Euler(new Vector3(0, 90, -angle * 180 / Mathf.PI)); //spawning roads with different rotation depending on the row
-                else cellGizmo.transform.rotation = Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)); //rotating buildings
+                else cellGizmo.transform.rotation = Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI + 90, 0, 0)); //rotating buildings
 
                 cellGizmo.name = grid.gridName + " [" + i + "][" + j + "]";
                 

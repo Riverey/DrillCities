@@ -25,7 +25,7 @@ public class Vagon_editor : Editor
         EditorGUILayout.LabelField("Length", myVagon.Length.ToString());
 
         EditorGUILayout.Space();
-        if (GUILayout.Button("EraseGrid") && myVagon.DebugIsOn)
+        if (GUILayout.Button("EraseGrid"))
         {
             foreach (BuildingSystem.VagonGrid grid in myVagon.Grids)
             {
