@@ -160,7 +160,7 @@ Material:
     - _EnableGeometricSpecularAA: 0
     - _EnableSpecularOcclusion: 0
     - _EnergyConservingSpecularColor: 1
-    - _GridOpacity: 0
+    - _GridOpacity: 1
     - _HdrpVersion: 2
     - _HeightAmplitude: 0.02
     - _HeightCenter: 0.5
@@ -251,7 +251,7 @@ Material:
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
     - _dimensions: {r: 63, g: 33, b: 0, a: 0}
-    - _shadowPosition: {r: -3, g: -8, b: 0, a: 0}
+    - _shadowPosition: {r: 0, g: -19, b: 0, a: 0}
 --- !u!114 &1884621407842147223
 MonoBehaviour:
   m_ObjectHideFlags: 11

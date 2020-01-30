@@ -27,7 +27,7 @@ public class Vagon_editor : Editor
         EditorGUILayout.Space();
         if (GUILayout.Button("EraseGrid"))
         {
-            foreach (BuildingSystem.VagonGrid grid in myVagon.Grids)
+            foreach (VagonGrid grid in myVagon.Grids)
             {
                 myVagon.EraseGrid(grid);
             }
@@ -42,29 +42,6 @@ public class ResourseSystem_editor : Editor
     {
         ResourseSystem myResourseSystem = (ResourseSystem)target;
         EditorGUILayout.LabelField("Name", myResourseSystem.resourseName);
-    }
-}
-
-[CustomEditor(typeof(GridCell))]
-public class GridCell_editor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        //DrawDefaultInspector();
-        GridCell cell = (GridCell)target;
-        EditorGUILayout.LabelField("Coordinates", cell.coordinates.ToString());
-
-        EditorGUILayout.PrefixLabel("Neighbors", EditorStyles.boldLabel);
-
-        for (int i = 0; i < cell.neighbors.Length; i++)
-        {
-            if (cell.neighbors[i] != null)
-            {
-                EditorGUILayout.LabelField("Neighbor " + i, cell.neighbors[i].name);
-            }
-        }
-
-        cell.cellName = (TextMeshPro)EditorGUILayout.ObjectField("Cell name", cell.cellName, typeof(TextMeshPro), true);
     }
 }
 

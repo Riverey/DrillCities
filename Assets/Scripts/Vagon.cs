@@ -8,7 +8,7 @@ public class Vagon : MonoBehaviour
 
     public Material gridMaterial;
 
-    private GameObject gridsHolder;
+    private GameObject vagonGridsHolder;
 
     public GameObject centerPivot;
 
@@ -23,7 +23,7 @@ public class Vagon : MonoBehaviour
     private float radius; public float Radius { get => radius; set { if (radius != value) { radius = value; } } }
     private float length; public float Length { get => length; set { if (length != value) { length = value; } } }
 
-    [SerializeField] private BuildingSystem.VagonGrid[] grids; public BuildingSystem.VagonGrid[] Grids { get => grids; set => grids = value; }
+    [SerializeField] private VagonGrid[] grids; public VagonGrid[] Grids { get => grids; set => grids = value; }
 
     private void Start()
     {
@@ -42,59 +42,50 @@ public class Vagon : MonoBehaviour
         vagonCollider.radius = radius;
         vagonCollider.height = length + (radius * 2.0f);
 
-        gridMaterial.SetVector("_dimensions", new Vector4(segmentsAmmount, rowsAmmount, 0, 0 ));
+        //gridMaterial.SetVector("_dimensions", new Vector4(segmentsAmmount, rowsAmmount, 0, 0 )); //legacy system to change the grid of the shader
 
-        GridsReDrawRequest();
-    }
+        centerPivot = gameObject;
 
-    /// <summary>
-    /// Method to draw grids
-    /// </summary>
-    private void GridsReDrawRequest()
-    {
-        if (gridsHolder == null)
-        {
-            gridsHolder = new GameObject("GridObjects Holder"); //if couldn't find an existing object, create a new one
-            gridsHolder.transform.parent = gameObject.transform;
-        }
-
-        foreach (BuildingSystem.VagonGrid grid in Grids)
-        {
-            EraseGrid(grid); //erasing old grids
-            DrawGrid(grid); //
-        }
-        centerPivot = gameObject; // temp solution, assigning central point as a center of the cilinder for now
+        foreach (VagonGrid grid in Grids) DrawGrid(grid); //redraw all the grids
     }
 
     /// <summary>
     /// Function to populate arrays with grid objects
     /// </summary>
-    private void DrawGrid(BuildingSystem.VagonGrid grid)
+    private void DrawGrid(VagonGrid grid)
     {
-        int rows = 0;
-        
-        switch (grid.gridType) //calculating row ammounts for this type of grid
+        EraseGrid(grid); //dumping the previous grid
+
+        //checking if the hierarchy gameobjects exists and if not creates a new one to store all grid cells
+        if (vagonGridsHolder == null) 
         {
-            case BuildingSystem.GridType.main:
-                rows = RowsAmmount;
-                break;
-            case BuildingSystem.GridType.edge:
-                rows = RowsAmmount * 2 - 1;
-                break;
-            case BuildingSystem.GridType.edgeCross:
-                rows = RowsAmmount - 1;
-                break;
+            vagonGridsHolder = new GameObject("Vagon Grids");
+            vagonGridsHolder.transform.parent = gameObject.transform;
         }
 
-        grid.grid = new BuildingSystem.GridCell[rows,SegmentsAmmount]; //creating a new 2d array to store all grid cells of this grid
-
-        if (grid.parentObject == null)
+        if (grid.gridHolder == null)
         {
-            grid.parentObject = new GameObject(grid.gridName + "GridObjects Holder");
-            grid.parentObject.transform.parent = gridsHolder.transform;
+            grid.gridHolder = new GameObject(grid.gridName + " Grid");
+            grid.gridHolder.transform.parent = vagonGridsHolder.transform;
         }
 
-        for (int i = 0; i < rows; i++) 
+        int actualRows = 0;        
+        switch (grid.gridType)
+        {
+            case GridType.main:
+                actualRows = RowsAmmount;
+                break;
+            case GridType.edge:
+                actualRows = RowsAmmount * 2 - 1;
+                break;
+            case GridType.edgeCross:
+                actualRows = RowsAmmount - 1;
+                break;
+        } //calculating actual row ammounts for this type of grid
+
+        grid.grid = new GridCell[actualRows,SegmentsAmmount]; //creating a new 2d array to store all grid cells of this grid        
+
+        for (int i = 0; i < actualRows; i++) 
         {
             for (int j = 0; j < SegmentsAmmount; j++)
             {
@@ -102,51 +93,52 @@ public class Vagon : MonoBehaviour
                 float angle = (j * Mathf.PI * 2 / SegmentsAmmount); //angle in radians
 
                 float yOffset = i;
-                yOffset = yOffset.Remap(0.0f, rows - 1, -Length / 2 + (0.5f + cellProportion / 20), Length / 2 - (0.5f + cellProportion / 20));
+                yOffset = yOffset.Remap(0.0f, actualRows - 1, -Length / 2 + (0.5f + cellProportion / 20), Length / 2 - (0.5f + cellProportion / 20)); //remap the offset from abstract value to actual transform value depending on the length of the vagon
 
                 switch (grid.gridType) //calculating grid offsets for different types of grids
                 {
-                    case BuildingSystem.GridType.main:
+                    case GridType.main:
                         break; //no need for offset for regular buildings
-                    case BuildingSystem.GridType.edge:
-                        int gridOffset = i % 2 == 0 ? 1 : 0;
-                        angle += gridOffset * (Mathf.PI / SegmentsAmmount); //adding an offset for sub and cross grids;
+                    case GridType.edge:
+                        int gridOffset = i % 2 == 0 ? 1 : 0; //each second row will be offset using this int
+                        angle += gridOffset * (Mathf.PI / SegmentsAmmount);
                         break;
-                    case BuildingSystem.GridType.edgeCross:
+                    case GridType.edgeCross:
                         angle += (Mathf.PI / SegmentsAmmount);
                         yOffset = i;
-                        yOffset = yOffset.Remap(0.0f, rows - 1, -Length / 2 + (1 + cellProportion / 20), Length / 2 - (1 + cellProportion / 20));
+                        yOffset = yOffset.Remap(0.0f, actualRows - 1, -Length / 2 + (1 + cellProportion / 20), Length / 2 - (1 + cellProportion / 20));
                         break;
                 }
 
-                Vector3 cellCenterTemp = new Vector3(yOffset / Radius, -Mathf.Sin(angle), -Mathf.Cos(angle)) * Radius;
+                Vector3 cellCenterTemp = new Vector3(yOffset, Mathf.Cos(angle) * Radius, -Mathf.Sin(angle) * Radius); //creating a vector for the grid cell coordinates
 
-                grid.grid[i, j] = new BuildingSystem.GridCell
+                grid.grid[i, j] = new GridCell
                 {
                     parentGrid = grid,
                     coordinates = new Vector2(i, j), //storing cell coordinates
                     cellCenter = cellCenterTemp,
-                    parent = grid.parentObject.transform,
+                    parent = grid.gridHolder.transform,
                     isOccupied = false
                 };
                 
-                GameObject cellGizmo = Instantiate(grid.cellObject, grid.parentObject.transform); //storing the debug grid cell we are working on right now
+                GameObject cellGizmo = Instantiate(grid.cellObject, grid.gridHolder.transform); //storing the debug grid cell we are working on right now
                 grid.grid[i, j].cellGizmo = cellGizmo; //assigning the gizmo object to it's cell object
 
                 cellGizmo.transform.localPosition = cellCenterTemp;
 
-                if (grid.gridType == BuildingSystem.GridType.edge) cellGizmo.transform.rotation = i % 2 == 0 ? Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)) : Quaternion.Euler(new Vector3(0, 90, -angle * 180 / Mathf.PI)); //spawning roads with different rotation depending on the row
-                else cellGizmo.transform.rotation = Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI + 90, 0, 0)); //rotating buildings
+                if (grid.gridType == GridType.edge) cellGizmo.transform.rotation = i % 2 == 0 ? Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)) : Quaternion.Euler(new Vector3(0, 90, -angle * 180 / Mathf.PI)); //spawning roads with different rotation depending on the row
+                else cellGizmo.transform.rotation = Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)); //rotating buildings
 
                 cellGizmo.name = grid.gridName + " [" + i + "][" + j + "]";
                 
             }
-        }
+        } //spawning cells and storing them
     }
 
-    public void EraseGrid(BuildingSystem.VagonGrid grid)
+    public void EraseGrid(VagonGrid grid)
     {
-       DestroyImmediate(grid.parentObject);
+        DestroyImmediate(grid.gridHolder);
+        grid.grid = null; //dumping the previous array
     }
 }
 
