@@ -4,13 +4,15 @@ using UnityEngine;
 [System.Serializable]
 public class GridCell
 {
-    public VagonGrid parentGrid; //store parentgrid of the cell
+    public VagonGrid parentGrid; //store parent grid of the cell
     public Vector2 coordinates;
+    public float angle;
     public GameObject cellGizmo; //associated gizmo object
     public Vector3 cellCenter; //transform of the cell regarding to the Vagon body
     public Transform parent;
     public bool isOccupied;
-    public GridBuilding building; //reference to the building that is built on this cel        
+    public GridBuilding building; //reference to the building that is built on this cel    l
+    public Material material;
 } //a class to contain infromation about cells
 
 /// <summary>
@@ -24,10 +26,11 @@ public class VagonGrid
     public GridType gridType;
     public GameObject gridHolder; //game object to store all drid objects in for organisation
     public GameObject cellObject; //place to store a prefab for this grid
+    public int actualRows;
     public GridCell[,] grid; //2d array used to store grid cells
 }
 
-public enum GridType { main, edge, edgeCross }
+public enum GridType { main, road, cross }
 
 public class BuildingSystem : MonoBehaviour
 {
@@ -44,81 +47,32 @@ public class BuildingSystem : MonoBehaviour
 
     private CurrentBuildState CurrentBuildState1 { get; set; } = CurrentBuildState.none;
 
-    private GridType currentGridType = GridType.main;
+    private GridType currentGridType = GridType.road;
     public GridType GetCurrentGridType() => currentGridType;
-    public void SetCurrentGridType(GridType value) => currentGridType = value;    
+    public void SetCurrentGridType(GridType value) => currentGridType = value;
+
+    private GridCell targetGridCell;
+    private GridCell oldTargetCell;
 
     void Update()
     {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit, 150.0f) && hit.transform.gameObject.tag == "RaycastTarget") //9 is the Vagons layer
-        {                
-            CapsuleCollider colCollider = (CapsuleCollider)hit.collider;
-            Vagon hitVagon = hit.transform.gameObject.GetComponent<Vagon>();
-
-            Material hitGridMaterial = hitVagon.gridMaterial; //old highlight implementation with a shader
-
-            VagonGrid targetGrid = null;
-
-            for (int i = 0; i < hitVagon.Grids.Length; i++)
-            {
-                if (hitVagon.Grids[i].gridType == GridType.main)
-                {
-                    targetGrid = hitVagon.Grids[i];
-                }
-            }
-                
-            float maxX = hitVagon.RowsAmmount - 1;
-            int localX = Mathf.RoundToInt(hit.point.x.Remap(hitVagon.transform.position.x - maxX / 2, hitVagon.transform.position.x + maxX / 2, 0, maxX));
-
-            float maxY = 360.0f / hitVagon.SegmentsAmmount;
-            Vector3 hitVector = new Vector3(0.0f, hitVagon.transform.position.y + 10.0f, hitVagon.transform.position.z);
-
-            float hitY = Vector3.Angle(hitVector, new Vector3(0.0f, hit.point.y, hit.point.z));
-            Debug.Log(hitY);
-            if (hit.point.z > 0) { hitY = 360.0f - hitY; }
-            int localY = (int)hitY.Remap(0.0f, 360.0f - maxY * 2, 0.0f, hitVagon.SegmentsAmmount - 1);
-
-            Debug.DrawLine(hitVagon.transform.position, hitVector, Color.red);
-            Debug.DrawLine(hitVagon.transform.position, new Vector3(hitVagon.transform.position.x, hit.point.y, hit.point.z), Color.blue);
-
-            Debug.Log(hit.point + "   " + hitY + "  " + localX + " " + localY);
-
-            hitGridMaterial.SetFloat("_GridOpacity", Mathf.Lerp(hitGridMaterial.GetFloat("_GridOpacity"), 1.0f, 0.5f));
-            hitGridMaterial.SetVector("_shadowPosition", new Vector4(-localY, -localX, 0.0f, 0.0f));
-
-            if (Input.GetKeyDown("1") && targetGrid!= null)
-            {
-                if (targetGrid.grid[localX, localY] != null && !targetGrid.grid[localX, localY].isOccupied)
-                { 
-                    //add a system to detect neighbors, should work across the zero line
-                    GameObject building = Instantiate(tempBuilding[0], targetGrid.grid[localX, localY].parent);
-                    building.transform.localPosition = targetGrid.grid[localX, localY].cellCenter;
-                }
-            }
-            else if (Input.GetKeyDown("2") && targetGrid != null)
-            {
-                if (targetGrid.grid[localX, localY] != null && !targetGrid.grid[localX, localY].isOccupied)
-                {
-                    //add a system to detect neighbors, should work across the zero line
-                    GameObject building = Instantiate(tempBuilding[1], targetGrid.grid[localX, localY].parent);
-                    building.transform.localPosition = targetGrid.grid[localX, localY].cellCenter;
-                }
-            }
-            else if (Input.GetKeyDown("3") && targetGrid != null)
-            {
-                if (targetGrid.grid[localX, localY] != null && !targetGrid.grid[localX, localY].isOccupied)
-                {
-                    //add a system to detect neighbors, should work across the zero line
-                    GameObject building = Instantiate(tempBuilding[2], targetGrid.grid[localX, localY].parent);
-                    building.transform.localPosition = targetGrid.grid[localX, localY].cellCenter;
-                }
-            }
+        if (Input.GetMouseButton(0))
+        {
+            GetTargetGridCell();
         }
-        
+        if (Input.GetKeyDown("1"))
+        {
+            currentGridType = GridType.main;
         }
+        else if (Input.GetKeyDown("2"))
+        {
+            currentGridType = GridType.road;
+        }
+        else if (Input.GetKeyDown("3"))
+        {
+            currentGridType = GridType.cross;
+        }
+    }
 
     void BuildStateSwitch()
     {
@@ -129,22 +83,88 @@ public class BuildingSystem : MonoBehaviour
             {
                 if (grid.gridType == currentGridType)
                 {
-                    if (isBuilding) { }
-                    else { }
-                    
+                    if (isBuilding) { grid.gridHolder.SetActive(true); }
+                    else { grid.gridHolder.SetActive(false); }
                 }
             }
         } //switch on vagon grids if it's the same as the current grid target
     }
 
-    GridCell BuildRaycast()
+    void BuildingUpdate()
     {
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, MouseOrbitImproved.distance + 10f, 9) && hit.transform.gameObject.tag == "RaycastTarget") //9 is the Vagons layer
+
+    }
+
+    private void GetTargetGridCell()
+    {
+
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit targetHitPoint, MouseOrbitImproved.distance + 10f) && targetHitPoint.transform.gameObject.tag == "RaycastTarget") //9 is the Vagons layer
         {
+            CapsuleCollider colCollider = (CapsuleCollider)targetHitPoint.collider;
+            Vagon targetVagon = targetHitPoint.transform.gameObject.GetComponent<Vagon>();
+            
+            VagonGrid targetGrid = null; //object to store the vagon that we're pointing at
+
+            Vector3 localHitPoint = targetVagon.GetLocalCoordinates(targetHitPoint.point); //storing local coordinates of the hit point
+            Vector3 vagonHit = new Vector3(0.0f, localHitPoint.y, localHitPoint.z);
+
+            foreach (VagonGrid grid in targetVagon.Grids)
+            {
+                if (grid.gridType == currentGridType) targetGrid = grid;
+            }
+            int gridCellX = 0;
+            switch (currentGridType)
+            {
+                case GridType.main:
+                    gridCellX = Mathf.RoundToInt(Mathf.Clamp(localHitPoint.x.Remap(-targetVagon.Length / 2.0f + 0.5f, targetVagon.Length / 2.0f - 0.5f, 0.0f, targetGrid.actualRows - 1), 0.0f, targetGrid.actualRows - 1)); //getting an X coordinate of the cell by remaping the position of the hit to local coordinates of the vagon
+                    break;
+                case GridType.road:
+                    gridCellX = Mathf.RoundToInt(Mathf.Clamp(localHitPoint.x.Remap(-targetVagon.Length / 2.0f, targetVagon.Length / 2.0f, 0.0f, targetGrid.actualRows - 1), 0.0f, targetGrid.actualRows - 1)); //getting an X coordinate of the cell by remaping the position of the hit to local coordinates of the vagon
+                    break;
+                case GridType.cross:
+                    gridCellX = Mathf.RoundToInt(Mathf.Clamp(localHitPoint.x.Remap(-targetVagon.Length / 2.0f, targetVagon.Length / 2.0f, 0.0f, targetGrid.actualRows - 1), 0.0f, targetGrid.actualRows - 1)); //getting an X coordinate of the cell by remaping the position of the hit to local coordinates of the vagon
+                    break;
+            }
+            
+            float gridCellYAngle = localHitPoint.z <= 0.0f ? Vector3.Angle(targetVagon.transform.up * 100.0f, vagonHit) : 360.0f - Vector3.Angle(targetVagon.transform.up * 100.0f, vagonHit); //for anges greater than 180
+            
+            float segmentAngle = 180.0f / targetVagon.SegmentsAmmount; //half of the segment angle
+
+            Debug.Log(localHitPoint + " " + targetHitPoint.point + " Hit angle: " + gridCellYAngle);
+
+            for (int i = 0; i < targetVagon.SegmentsAmmount; i++)
+            {
+                GridCell tempGridCell = targetGrid.grid[gridCellX, i];
+
+                if (gridCellYAngle - tempGridCell.angle <= segmentAngle)
+                {
+                    if (tempGridCell != targetGridCell || targetGridCell == null)
+                    {
+                        if (targetGridCell != null && targetGridCell.material != null)
+                        {
+                            targetGridCell.material.SetInt("isHovered", 0);
+                        }
+
+                        targetGridCell = tempGridCell;
+
+                        if (targetGridCell.material != null)
+                        {
+                            targetGridCell.material.SetInt("isHovered", 1);
+                        }
+                        
+                    }
+
+                    break;
+                }
+            }
+            
+
+            Debug.DrawRay(targetVagon.transform.position, targetVagon.transform.up * 100.0f);
+            Debug.DrawRay(targetVagon.transform.position, vagonHit, Color.red);
 
         }
 
-        return null;
+        //return targetGridCell;
     }
 
 

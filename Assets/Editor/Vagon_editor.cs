@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
-using TMPro;
 
 [CustomEditor(typeof(Vagon))]
 public class Vagon_editor : Editor
@@ -15,8 +12,8 @@ public class Vagon_editor : Editor
         
         EditorGUILayout.PrefixLabel("Vagon grid editor", EditorStyles.boldLabel);
 
-        int segmentsAmmount = EditorGUILayout.IntSlider("Segments", myVagon.SegmentsAmmount, 0, 64);
-        int rowsAmmount = EditorGUILayout.IntSlider("Rows", myVagon.RowsAmmount, 0, 64);
+        int segmentsAmmount = EditorGUILayout.IntSlider("Segments", myVagon.SegmentsAmmount, 0, 63);
+        int rowsAmmount = EditorGUILayout.IntSlider("Rows", myVagon.RowsAmmount, 0, 33);
 
         if (segmentsAmmount > 1) myVagon.SegmentsAmmount = segmentsAmmount;
         if (rowsAmmount > 1) myVagon.RowsAmmount = rowsAmmount;
@@ -25,11 +22,18 @@ public class Vagon_editor : Editor
         EditorGUILayout.LabelField("Length", myVagon.Length.ToString());
 
         EditorGUILayout.Space();
-        if (GUILayout.Button("EraseGrid"))
+        if (GUILayout.Button("Erase Grid"))
         {
             foreach (VagonGrid grid in myVagon.Grids)
             {
                 myVagon.EraseGrid(grid);
+            }
+        }
+        if (GUILayout.Button("ReDraw Grid"))
+        {
+            foreach (VagonGrid grid in myVagon.Grids)
+            {
+                myVagon.DrawGrid(grid);
             }
         }
     }
