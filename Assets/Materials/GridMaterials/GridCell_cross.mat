@@ -125,6 +125,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Boolean_34C9A3BF: 0
     - Boolean_44CF5E3F: 0
     - Boolean_BDA91161: 0
     - Vector1_17A2C5C6: 0.8
@@ -251,6 +252,8 @@ Material:
     - _ZTestModeDistortion: 4
     - _ZTestTransparent: 4
     - _ZWrite: 1
+    - isHovered: 0
+    - isOccupied: 0
     m_Colors:
     - Color_27F921A7: {r: 0.04023647, g: 1, b: 0, a: 0}
     - Color_B62B6240: {r: 4, g: 4, b: 4, a: 0}
