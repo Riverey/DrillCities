@@ -6,7 +6,7 @@ public class MouseOrbitImproved : MonoBehaviour
     public Transform enviroment;
 
     public Transform target;
-    public static float distance = 5.0f;
+    public static float distance = 50.0f;
     public float xSpeed = 120.0f;
     public float ySpeed = 120.0f;
 
@@ -24,9 +24,9 @@ public class MouseOrbitImproved : MonoBehaviour
 
     private Rigidbody rigidbody;
 
-    float x = 0.0f;
-    float y = 0.0f;
-    float z = 0.0f;
+    private static float x = 0.0f;
+    private static float y = 0.0f;
+    private static float z = 0.0f;
 
     float horizontalMove = 0.0f;
 
@@ -34,6 +34,10 @@ public class MouseOrbitImproved : MonoBehaviour
     private bool isFlipping = false;
 
     public Vector3 angles;
+
+    public static float X { get => x; }
+    public static float Y { get => y; }
+    public static float Z { get => z; }
 
     // Use this for initialization
     void Start()

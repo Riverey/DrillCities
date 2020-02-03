@@ -29,11 +29,16 @@ public class Vagon : MonoBehaviour
 
         foreach (VagonGrid vagonGrid in grids)
         {
+            vagonGrid.parentVagon = this;
+
             foreach (GridCell cell in vagonGrid.grid)
             {
                 cell.material = cell.cellGizmo.GetComponentInChildren<MeshRenderer>().material;
+                if (cell.isOccupied) cell.material.SetInt("isOccupied", 1);
             }
         }
+
+        
     }
 
     /// <summary>
@@ -122,7 +127,7 @@ public class Vagon : MonoBehaviour
                 {
                     parentGrid = grid,
                     coordinates = new Vector2(i, j), //storing cell numeric coordinates
-                    angle = angle * 180 / Mathf.PI,
+                    angle = angle,
                     cellCenter = cellCenterTemp,
                     parent = grid.gridHolder.transform,
                     isOccupied = false
@@ -152,6 +157,12 @@ public class Vagon : MonoBehaviour
     public Vector3 GetLocalCoordinates(Vector3 point)
     {
         point = transform.InverseTransformPoint(point);
+        return point;
+    }
+
+    public Vector3 GetWorldCoordinates(Vector3 point)
+    {
+        point = transform.TransformPoint(point);
         return point;
     }
 }
