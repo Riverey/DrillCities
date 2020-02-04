@@ -25,7 +25,7 @@ Material:
     type: 3}
   m_ShaderKeywords: _NORMALMAP_TANGENT_SPACE
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap:
@@ -129,7 +129,7 @@ Material:
     - Boolean_44CF5E3F: 0
     - Boolean_BDA91161: 0
     - Vector1_17A2C5C6: 1
-    - Vector1_768F429A: 0.053
+    - Vector1_768F429A: 0.74
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1

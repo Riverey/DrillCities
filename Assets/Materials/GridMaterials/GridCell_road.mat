@@ -25,7 +25,7 @@ Material:
     type: 3}
   m_ShaderKeywords: _NORMALMAP_TANGENT_SPACE
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap:
@@ -129,7 +129,7 @@ Material:
     - Boolean_44CF5E3F: 0
     - Boolean_BDA91161: 0
     - Vector1_17A2C5C6: 0.6
-    - Vector1_768F429A: 0.037
+    - Vector1_768F429A: 1
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
@@ -255,8 +255,8 @@ Material:
     - isHovered: 0
     - isOccupied: 0
     m_Colors:
-    - Color_27F921A7: {r: 0.04023647, g: 1, b: 0, a: 0}
-    - Color_B62B6240: {r: 15.999998, g: 15.999998, b: 15.999998, a: 0}
+    - Color_27F921A7: {r: 16, g: 16, b: 16, a: 0}
+    - Color_B62B6240: {r: 0, g: 16, b: 0, a: 0}
     - Color_FC96A139: {r: 0.1872549, g: 0.1872549, b: 0.1872549, a: 0}
     - _BaseColor: {r: 1, g: 0.9425313, b: 0, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}

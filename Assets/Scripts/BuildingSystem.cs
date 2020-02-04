@@ -10,10 +10,11 @@ public class GridCell
     public GameObject cellGizmo; //associated gizmo object
     public Vector3 cellCenter; //transform of the cell regarding to the Vagon body
     public Transform parent;
-    public bool isOccupied;
+    private bool isOccupied;
+    public bool IsOccupied { get => isOccupied; set { isOccupied = value; if (material != null) { int i = isOccupied ? 1 : 2; material.SetInt("isOccupied", i); } } }
     public bool isBlocked; //use for cells that are blocked but something non-removable like leg pillars or roads inside buildings
     public GridBuilding building; //reference to the building that is built on this cel
-    public Material material;
+    public Material material;   
 } //a class to contain information about cells
 
 /// <summary>
@@ -83,10 +84,11 @@ public class BuildingSystem : MonoBehaviour
             if (hoverGizmo) { DestroyImmediate(hoverGizmo); hoverGizmo = null; }
         }
     }
+
     /// <summary>
     /// Method that recieves SO from buttons, activates grids and flips the isBuilding bool
     /// </summary>
-    public void BuildingSystemTrigger(GameObject GridBuilding = null)
+    public void BuildingStateTrigger(GameObject GridBuilding = null)
     {
         if (!isBuilding)
         {
@@ -121,7 +123,6 @@ public class BuildingSystem : MonoBehaviour
         else targetGridArea = VagonRaycast();
 
         bool isOccupied = false;
-
         if (targetGridArea != null)
         {
             ClearOldArea();
@@ -130,7 +131,7 @@ public class BuildingSystem : MonoBehaviour
             foreach (GridCell gridCell in targetGridArea)
             {
                 gridCell.material.SetInt("isHovered", 1);
-                if (gridCell.isOccupied)
+                if (gridCell.IsOccupied)
                 {
                     gridCell.material.SetInt("isOccupied", 1);
                     isOccupied = true;
@@ -187,7 +188,7 @@ public class BuildingSystem : MonoBehaviour
 
                 foreach (GridCell gridCell in targetGridArea)
                 {
-                    gridCell.isOccupied = true;
+                    gridCell.IsOccupied = true;
                     gridCell.material.SetInt("isOccupied", 1);
                 }
             }
@@ -195,7 +196,7 @@ public class BuildingSystem : MonoBehaviour
             {
                 foreach (GridCell gridCell in targetGridArea)
                 {
-                    gridCell.isOccupied = false;
+                    gridCell.IsOccupied = false;
                     gridCell.material.SetInt("isOccupied", 2);
                 }
             }
@@ -210,7 +211,7 @@ public class BuildingSystem : MonoBehaviour
             foreach (GridCell gridCell in oldTargetGridArea)
             {
                 gridCell.material.SetInt("isHovered", 0);
-                if (!gridCell.isOccupied) gridCell.material.SetInt("isOccupied", 0);
+                if (!gridCell.IsOccupied) gridCell.material.SetInt("isOccupied", 0);
             }
         }//returning materials of the previous grid back to normal
     }

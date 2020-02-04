@@ -34,7 +34,6 @@ public class Vagon : MonoBehaviour
             foreach (GridCell cell in vagonGrid.grid)
             {
                 cell.material = cell.cellGizmo.GetComponentInChildren<MeshRenderer>().material;
-                if (cell.isOccupied) cell.material.SetInt("isOccupied", 1);
             }
         }
 
@@ -130,7 +129,7 @@ public class Vagon : MonoBehaviour
                     angle = angle,
                     cellCenter = cellCenterTemp,
                     parent = grid.gridHolder.transform,
-                    isOccupied = false
+                    IsOccupied = false
                 }; //creating the Grid Cell and storing it's parameters
 
                 GridCell currentGridCell = grid.grid[i, j];
