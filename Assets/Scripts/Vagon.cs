@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using TMPro;
 
 [RequireComponent(typeof(CapsuleCollider))]
 public class Vagon : MonoBehaviour
