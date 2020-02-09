@@ -11,7 +11,7 @@ public class GridCell
     public Vector3 cellCenter; //transform of the cell regarding to the Vagon body
     public Transform parent;
     private bool isOccupied;
-    public bool IsOccupied { get => isOccupied; set { isOccupied = value; if (material != null) { int i = isOccupied ? 1 : 2; material.SetInt("isOccupied", i); } } }
+    public bool IsOccupied { get => isOccupied; set { isOccupied = value; if (material != null) { int i = isOccupied ? 1 : 2; material.SetInt("isOccupied", i); if (cellGizmo != null) { Debug.Log("Success!"); cellGizmo.gameObject.GetComponentInChildren<MeshRenderer>().sortingOrder = isOccupied ? 1 : 2; } } } }
     public bool isBlocked; //use for cells that are blocked but something non-removable like leg pillars or roads inside buildings
     public GridBuilding building; //reference to the building that is built on this cel
     public Material material;   

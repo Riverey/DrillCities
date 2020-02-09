@@ -35,9 +35,7 @@ public class Vagon : MonoBehaviour
             {
                 cell.material = cell.cellGizmo.GetComponentInChildren<MeshRenderer>().material;
             }
-        }
-
-        
+        }        
     }
 
     /// <summary>
