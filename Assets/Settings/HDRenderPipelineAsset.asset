@@ -191,7 +191,7 @@ MonoBehaviour:
     supportShadowMask: 1
     supportSSR: 0
     supportSSAO: 1
-    supportSubsurfaceScattering: 1
+    supportSubsurfaceScattering: 0
     increaseSssSampleCount: 0
     supportVolumetrics: 1
     increaseResolutionOfVolumetrics: 0
@@ -340,9 +340,7 @@ MonoBehaviour:
   availableMaterialQualityLevels: -1
   m_DefaultMaterialQualityLevel: 4
   diffusionProfileSettings: {fileID: 0}
-  diffusionProfileSettingsList:
-  - {fileID: 0}
-  - {fileID: 0}
+  diffusionProfileSettingsList: []
   beforeTransparentCustomPostProcesses: []
   beforePostProcessCustomPostProcesses: []
   afterPostProcessCustomPostProcesses: []
