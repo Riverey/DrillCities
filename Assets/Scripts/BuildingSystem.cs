@@ -123,6 +123,7 @@ public class BuildingSystem : MonoBehaviour
         else targetGridArea = VagonRaycast();
 
         bool isOccupied = false;
+
         if (targetGridArea != null)
         {
             ClearOldArea();
