@@ -88,12 +88,12 @@ public class BuildingSystem : MonoBehaviour
     /// <summary>
     /// Method that recieves SO from buttons, activates grids and flips the isBuilding bool
     /// </summary>
-    public void BuildingStateTrigger(GameObject GridBuilding = null)
+    public void BuildingStateTrigger(GameObject gridBuilding = null)
     {
         if (!isBuilding)
         {
             isBuilding = true;
-            currentGridBuilding = GridBuilding;
+            currentGridBuilding = gridBuilding;
 
             foreach (Vagon vagon in allVagons)
             {
@@ -112,7 +112,7 @@ public class BuildingSystem : MonoBehaviour
             isBuilding = false;
             currentGridBuilding = null;
             currentGridBuildingScript = null;
-        }
+        } //if called when isBuilding already active, flip back to inactive state
     }
 
     void BuildingUpdate()
@@ -124,10 +124,9 @@ public class BuildingSystem : MonoBehaviour
 
         bool isOccupied = false;
 
-        if (targetGridArea != null)
+        if (targetGridArea != null) //if succesfully found an area, proceed
         {
             ClearOldArea();
-
 
             foreach (GridCell gridCell in targetGridArea)
             {
@@ -137,13 +136,11 @@ public class BuildingSystem : MonoBehaviour
                     gridCell.material.SetInt("isOccupied", 1);
                     isOccupied = true;
                 }
-            }
+            } 
 
-            oldTargetGridArea = targetGridArea; //storing the current gridArea in the old Area 
+            oldTargetGridArea = targetGridArea; //storing the current gridArea in the old Area             
 
-            
-
-            Vector3 buildingCenter = new Vector3(0.0f, 0.0f, 0.0f); ;
+            Vector3 buildingCenter = new Vector3(0.0f, 0.0f, 0.0f);
 
             if (currentGridType == GridType.main)
             {
@@ -203,8 +200,12 @@ public class BuildingSystem : MonoBehaviour
             }
         }
         else if (hoverGizmo != null) DestroyImmediate(hoverGizmo);
-    }
 
+    } //if isBuilding, this code will do the building update
+
+    /// <summary>
+    /// Clear the 2d array with GridCells
+    /// </summary>
     public void ClearOldArea()
     {
         if (oldTargetGridArea != null)
@@ -321,5 +322,12 @@ public class BuildingSystem : MonoBehaviour
         }
         return targetedGridArea;
     }
+
+
+    void BuildRequest(Vector3 buildingCenter, GridCell[] tragetGridArea)
+    {
+
+    }
+
 }
 
