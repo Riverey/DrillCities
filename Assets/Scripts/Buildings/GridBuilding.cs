@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class GridBuilding : MonoBehaviour
 {
-    public bool isBult;
     new public string name;
-    public GridType gridType = GridType.main;
+    public GridType gridType;
 
     public GameObject gizmo;
 
-
+    public bool isBult;
+    public float angle;
 }

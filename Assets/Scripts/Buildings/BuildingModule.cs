@@ -7,8 +7,7 @@ using UnityEngine;
 /// Class used to spawn and manage modules of a building
 /// </summary>
 public class BuildingModule : MonoBehaviour
-{
-   
+{   
     [SerializeField]
     public List<BuildingModuleVariant> variants;
 
@@ -26,4 +25,10 @@ public class BuildingModule : MonoBehaviour
 
     public GameObject currentModule;
 
+    private void Awake()
+    {
+        
+    }
 }
+
+

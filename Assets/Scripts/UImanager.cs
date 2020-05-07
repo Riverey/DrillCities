@@ -8,11 +8,16 @@ public class UImanager : MonoBehaviour
     public Image trainDiagramBody;
     public Image trainDiagramArrow;
 
-    // Start is called before the first frame update
-    void Start()
+    [System.Serializable]
+    public class LogMessage
     {
-        
+        public string type;
+        public string messageText;
+        public Sprite icon;
     }
+
+    public Sprite defaultIcon;
+    public List<LogMessage> logMessages;
 
     // Update is called once per frame
     void Update()
@@ -27,11 +32,26 @@ public class UImanager : MonoBehaviour
         trainDiagramArrow.rectTransform.rotation = Quaternion.Euler(0.0f, 0.0f, uiY - 90.0f);
     }
     /// <summary>
-    /// Call this to send a message to the log
+    /// This method is used to send a message to the UI Log
     /// </summary>
-    /// <param name="message"></param>
-    public void LogRequest(string message)
+    /// <param name="messageText"></param>
+    public void LogRequest(string messageType = null, string messageText = null)
     {
+        LogMessage targetLogMessage = new LogMessage { icon = defaultIcon };
 
+        if (messageType != null)
+        {
+            foreach (LogMessage logMessage in logMessages)
+            {
+                if (messageType == logMessage.type)
+                {
+                    targetLogMessage.icon = logMessage.icon;
+                    targetLogMessage.messageText = logMessage.messageText;
+                    break;
+                } //if requested type matches the type of the message, get and assign the corresponding icon
+            }
+        } //defining the message type
+
+        if (messageText != null) targetLogMessage.messageText = messageText;
     }
 }
