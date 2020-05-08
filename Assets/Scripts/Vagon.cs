@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(CapsuleCollider))]
 public class Vagon : MonoBehaviour
@@ -9,6 +10,8 @@ public class Vagon : MonoBehaviour
     public Transform centerPivot;
 
     public CapsuleCollider vagonCollider;
+
+    public List<Building> vagonBuildings = new List<Building>(); //list to stare all buildings built on this vagon
 
     [SerializeField]
     private int segmentsAmmount = 12; public int SegmentsAmmount { get => segmentsAmmount; set { if (segmentsAmmount != value) { segmentsAmmount = value; RecalculateVariables(); } } }
@@ -24,17 +27,9 @@ public class Vagon : MonoBehaviour
     private void Start()
     {
         RecalculateVariables();
+
         BuildingSystem.allVagons.Add(this);
-
-        foreach (VagonGrid vagonGrid in grids)
-        {
-            vagonGrid.parentVagon = this;
-
-            foreach (GridCell cell in vagonGrid.grid)
-            {
-                cell.material = cell.cellGizmo.GetComponentInChildren<MeshRenderer>().material;
-            }
-        }        
+        
     }
 
     /// <summary>
@@ -60,7 +55,8 @@ public class Vagon : MonoBehaviour
     {
         EraseGrid(grid); //dumping the previous grid
 
-        
+        grid.parentVagon = this;
+
         if (vagonGridsHolder == null) 
         {
             vagonGridsHolder = new GameObject("Vagon Grids");
@@ -76,7 +72,15 @@ public class Vagon : MonoBehaviour
             grid.gridHolder.transform.localPosition = Vector3.zero;
             grid.gridHolder.transform.localRotation = Quaternion.identity;
         } //check if grid holder exists
-      
+
+        if (grid.gridBuildingsHolder == null)
+        {
+            grid.gridBuildingsHolder = new GameObject(grid.gridName + "Grid Buildings Holder");
+            grid.gridBuildingsHolder.transform.parent = vagonGridsHolder.transform;
+            grid.gridBuildingsHolder.transform.localPosition = Vector3.zero;
+            grid.gridBuildingsHolder.transform.localRotation = Quaternion.identity;
+        } //checking if the hierarchy gameobjects exists and if not creates a new one to store all grid cells
+
         switch (grid.gridType)
         {
             case GridType.main:
@@ -127,7 +131,7 @@ public class Vagon : MonoBehaviour
                     cellCenter = cellCenterTemp,
                     parent = grid.gridHolder.transform,
                     IsOccupied = false
-                }; //creating the Grid Cell and storing it's parameters
+            }; //creating the Grid Cell and storing it's parameters
 
                 GridCell currentGridCell = grid.grid[i, j];
 
@@ -139,9 +143,13 @@ public class Vagon : MonoBehaviour
                 if (grid.gridType == GridType.road) cellGizmo.transform.localRotation = i % 2 == 0 ? Quaternion.Euler(new Vector3(0, 90, -angle * 180 / Mathf.PI)) : Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)); //spawning roads with different rotation depending on the row
                 else cellGizmo.transform.localRotation = Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)); //rotating buildings
 
-                cellGizmo.name = grid.gridName + " [" + i + "][" + j + "]";                
+                cellGizmo.name = grid.gridName + " [" + i + "][" + j + "]";
+
+                if (Application.isPlaying) currentGridCell.material = cellGizmo.GetComponentInChildren<MeshRenderer>().material;
             }
         } //spawning cells and storing them
+
+        grid.gridHolder.SetActive(false);
     }
 
     public void EraseGrid(VagonGrid grid)

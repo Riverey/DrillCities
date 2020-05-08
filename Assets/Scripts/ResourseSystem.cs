@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ResourseSystem : MonoBehaviour
 {
-
     public string resourseName;
 
     // Start is called before the first frame update

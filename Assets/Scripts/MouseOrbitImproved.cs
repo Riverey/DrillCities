@@ -65,7 +65,7 @@ public class MouseOrbitImproved : MonoBehaviour
 
         if ((y % 270 < -90.0f || y % 270 > 90.0f))
         {
-            if (z != 180.0f) { z = Mathf.Lerp(z, 180.0f, 0.5f); if (z >= 177.0f) { z = 180.0f; } isFlipping = true; }
+            if (z != 180.0f) { z = Mathf.Lerp(z, 180.0f, 0.3f); if (z >= 177.0f) { z = 180.0f; } isFlipping = true; }
             else {
                 isFlipping = false;
                 if (!isFlipped && !Input.GetMouseButton(1)) {
@@ -78,7 +78,7 @@ public class MouseOrbitImproved : MonoBehaviour
         }
         else
         {
-            if (z != 0.0f) { z = Mathf.Lerp(z, 0.0f, 0.5f); if (z <= 3.0f) { z = 0.0f; } isFlipping = true; }
+            if (z != 0.0f) { z = Mathf.Lerp(z, 0.0f, 0.3f); if (z <= 3.0f) { z = 0.0f; } isFlipping = true; }
             else
             {
                 isFlipping = false;

@@ -14,6 +14,6 @@ public class ResourseManager : MonoBehaviour
     private ResourseSystems[] myResourseSystems;
     /// <summary>Readonly - use to access all Resourse Systems that were set at startup</summary>
     public ResourseSystems[] resourseSystems { get { return myResourseSystems; } }
-
-    public static List<Vagon> vagonList;
+    
+    public static List<Building> allBuildings = new List<Building>();
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [System.Serializable]
 public class GridCell
@@ -11,7 +12,7 @@ public class GridCell
     public Vector3 cellCenter; //transform of the cell regarding to the Vagon body
     public Transform parent;
     private bool isOccupied;
-    public bool IsOccupied { get => isOccupied; set { isOccupied = value; if (material != null) { int i = isOccupied ? 1 : 2; material.SetInt("isOccupied", i); if (cellGizmo != null) { Debug.Log("Success!"); cellGizmo.gameObject.GetComponentInChildren<MeshRenderer>().sortingOrder = isOccupied ? 1 : 2; } } } }
+    public bool IsOccupied { get => isOccupied; set { isOccupied = value; if (material != null) { int i = isOccupied ? 1 : 2; material.SetInt("isOccupied", i); if (cellGizmo != null) { cellGizmo.gameObject.GetComponentInChildren<MeshRenderer>().sortingOrder = isOccupied ? 1 : 2; } } } }
     public bool isBlocked; //use for cells that are blocked but something non-removable like leg pillars or roads inside buildings
     public GridBuilding building; //reference to the building that is built on this cel
     public Material material;   
@@ -28,6 +29,7 @@ public class VagonGrid
     public GridType gridType;
     public GameObject gridHolder; //game object to store all drid objects in for organisation
     public GameObject cellObject; //place to store a prefab for this grid
+    public GameObject gridBuildingsHolder;
     public int actualRows;
     public GridCell[,] grid; //2d array used to store grid cells
 }
@@ -38,10 +40,8 @@ public class BuildingSystem : MonoBehaviour
 {
     private UImanager uiManager;
 
-    public GameObject tempGridBuilding;
-
-    public GameObject[] tempBuilding;
     public static List<Vagon> allVagons = new List<Vagon>();
+    public static List<GridBuilding> allBuildings;
 
     [System.Serializable] public class BuildingType { public GridBuilding[] buildings; }
     public List<BuildingType> buildings;
@@ -49,20 +49,23 @@ public class BuildingSystem : MonoBehaviour
     public bool isBuilding = false;
     
     private GridType currentGridType = GridType.main;
-    private GridBuilding currentTargetBuildingScript;
-    private GameObject currentTargetBuilding; //use to store the currently selected building
-    public GameObject CurrentTargetBuilding { get => currentTargetBuilding; set { currentTargetBuilding = value; currentTargetBuildingScript = currentTargetBuilding.GetComponent<GridBuilding>();  currentGridType = currentTargetBuildingScript.gridType; } }
+    public GridType CurrentGridType { get => currentGridType; set => currentGridType = value; }
+
+    private GridBuilding currentTargetBuilding;
+    public GridBuilding CurrentTargetBuilding { get => currentTargetBuilding; set { currentTargetBuilding = value; CurrentGridType = currentTargetBuilding.gridType; } }
 
     enum CurrentBuildState { none, building, demolishing } //current state of the Building System
     private CurrentBuildState CurrentBuildState1 { get; set; } = CurrentBuildState.none;
-    
-    private GridCell[] oldTargetGridArea;
+
+    private GridCell[] targetGridAreaCash;
 
     private GameObject currentHoverGizmo;
 
+    public int hoverShadowSize = 3;
+    public bool drawGizmos = false;
+
     private void Start()
     {
-        CurrentTargetBuilding = tempGridBuilding;
         uiManager = FindObjectOfType<UImanager>();
 
         isBuilding = false;
@@ -73,24 +76,18 @@ public class BuildingSystem : MonoBehaviour
         if (isBuilding)
         {
             BuildingUpdate();
-        }
 
-        if (Input.GetKeyDown("1"))
-        {
-            currentGridType = GridType.main;
-            if (currentHoverGizmo) { DestroyImmediate(currentHoverGizmo); currentHoverGizmo = null; }
-        }
-        else if (Input.GetKeyDown("2"))
-        {
-            currentGridType = GridType.road;
-            if (currentHoverGizmo) { DestroyImmediate(currentHoverGizmo); currentHoverGizmo = null; }
+            if(Input.GetKeyDown("escape"))
+            {
+                BuildingStateTrigger();
+            } //if escape pressed whilst in build mode, exit
         }
     }
 
     /// <summary>
     /// This method has to be called by UI buttons and accepts a building
     /// </summary>
-    public void BuildingStateTrigger(GameObject gridBuilding = null)
+    public void BuildingStateTrigger(GridBuilding gridBuilding = null)
     {
         if (!isBuilding)
         {
@@ -101,20 +98,39 @@ public class BuildingSystem : MonoBehaviour
             {
                 foreach (VagonGrid grid in vagon.Grids)
                 {
-                    if (grid.gridType != GridType.cross)
-                    {
-                        if (isBuilding) { grid.gridHolder.SetActive(true); }
-                        else { grid.gridHolder.SetActive(false); }
-                    }
+                    if (grid.gridType == CurrentTargetBuilding.gridType) grid.gridHolder.SetActive(true);
+                    else grid.gridHolder.SetActive(false);
                 }
-            } //switch on vagon grids if it's the same as the current grid target
+            }
         }
+        else if (gridBuilding != null)
+        {
+            if (currentHoverGizmo != null) Destroy(currentHoverGizmo);
+            CurrentTargetBuilding = gridBuilding;
+
+            foreach (Vagon vagon in allVagons)
+            {
+                foreach (VagonGrid grid in vagon.Grids)
+                {
+                    if (grid.gridType == CurrentTargetBuilding.gridType ) grid.gridHolder.SetActive(true);
+                    else grid.gridHolder.SetActive(false);
+                }
+            }
+        } //if called when isBuilding active and with a new grid building, check it's type
         else
         {
             isBuilding = false;
-            currentTargetBuilding = null;
-            currentTargetBuildingScript = null;
-        } //if called when isBuilding already active, flip back to inactive state
+            if (CurrentTargetBuilding != null) CurrentTargetBuilding = null;
+            if (currentHoverGizmo != null) Destroy(currentHoverGizmo);
+
+            foreach (Vagon vagon in allVagons)
+            {
+                foreach (VagonGrid grid in vagon.Grids)
+                {
+                    grid.gridHolder.SetActive(false);
+                }
+            }
+        } //if called when isBuilding already active and without passing a building, flip back to inactive state
     }
 
 
@@ -122,73 +138,101 @@ public class BuildingSystem : MonoBehaviour
     {
         ClearOldArea();
         GridCell[] targetGridArea = null;
-        if (currentGridType == GridType.main) targetGridArea = VagonRaycast(((Building)currentTargetBuildingScript).size.x, ((Building)currentTargetBuildingScript).size.y);
+        Vector2 targetSize = new Vector2(((Building)CurrentTargetBuilding).size.x, ((Building)CurrentTargetBuilding).size.y);
+        if (CurrentGridType == GridType.main) targetGridArea = VagonRaycast(targetSize.x, targetSize.y);
         else targetGridArea = VagonRaycast();
 
         if (targetGridArea != null) 
         {
             ClearOldArea(); //wipe storage for old area
-
-            oldTargetGridArea = targetGridArea; //storing the current gridArea in the old Area
+            targetGridAreaCash = targetGridArea; //storing the current gridArea in the old Area
             bool isOccupied = false; //use to store info about current target area
+            VagonGrid targetGrid = targetGridArea[0].parentGrid;
+            Vagon targetVagon = targetGrid.parentVagon;           
+
+            #region Calculating the center of the target area and displaying gizmo
+            Vector3 buildingCenter = new Vector3(0.0f, 0.0f, 0.0f);
+            float buildingAngle = 0.0f;
+
+            if (CurrentGridType == GridType.main)
+            {
+                float centX = 0.0f;
+                float centY = 0.0f;
+
+                string debugString = "";
+
+                for (int i = 0; i < targetGridArea.Length; i++)
+                {
+                    centX = centX + targetGridArea[i].coordinates.x;
+
+                    if (targetGridArea[0].angle - targetGridArea[i].angle < Mathf.PI)
+                    {
+                        centY = centY - (2 * Mathf.PI - targetGridArea[i].angle);
+                    } //checking if the object is on the edge
+                    else centY = centY + targetGridArea[i].angle; //if not on the edge - all cool, proceed to adding and averaging angles
+                }
+
+                centX = 0.0f - (targetGridArea[0].parentGrid.parentVagon.Length / 2) + centX / targetGridArea.Length + 0.5f;
+
+                centY /= targetGridArea.Length;
+
+                if (centY < 0) centY = 2 * Mathf.PI + centY;
+
+                //Debug.Log(debugString + " / " + centY);
+
+                buildingAngle = centY;
+
+                buildingCenter = new Vector3(centX, Mathf.Cos(centY) * targetVagon.Radius, -Mathf.Sin(centY) * targetVagon.Radius);
+                ;
+            } //calculating the center of the building for buildings
+            else
+            {
+                buildingCenter = targetGridArea[0].cellCenter;
+                buildingAngle = targetGridArea[0].angle;
+            }//getting the center of the cell for roads and crosses
+
+            if (drawGizmos)
+            {
+                if (currentHoverGizmo == null) currentHoverGizmo = Instantiate(CurrentTargetBuilding.gizmo);
+                currentHoverGizmo.transform.parent = targetVagon.transform;
+                currentHoverGizmo.transform.localPosition = buildingCenter;
+                switch (CurrentGridType)
+                {
+                    case GridType.main:
+                        currentHoverGizmo.transform.localRotation = Quaternion.Euler(new Vector3(-buildingAngle * 180 / Mathf.PI, 0, 0));
+                        break;
+                    case GridType.road:
+                        Debug.Log(targetGridAreaCash[0].coordinates);
+                        currentHoverGizmo.transform.localRotation = targetGridArea[0].coordinates.x % 2 == 0 ? Quaternion.Euler(new Vector3(0, 90, -buildingAngle * 180 / Mathf.PI)) : Quaternion.Euler(new Vector3(-buildingAngle * 180 / Mathf.PI, 0, 0));
+                        break;
+                    case GridType.cross:
+                        currentHoverGizmo.transform.localRotation = Quaternion.Euler(new Vector3(-buildingAngle * 180 / Mathf.PI, 0, 0));
+                        break;
+                } //setting the rotation according to the type of the building
+            }
+
+            #endregion
+
 
             #region Checking if all cells are unoccupied
             foreach (GridCell gridCell in targetGridArea)
             {
                 gridCell.material.SetInt("isHovered", 1); //checking the material property to reflect that the cell is being hovered
+                gridCell.material.SetFloat("Opacity", 1);
                 if (gridCell.IsOccupied)
                 {
                     gridCell.material.SetInt("isOccupied", 1);
                     isOccupied = true; //if one of the cells is occupied, building can not be build
                 }
             } //managing the color of of all cells in the target area
-            #endregion               
-
-            #region Calculating the center of the target area and displaying gizmo
-            Vector3 buildingCenter = new Vector3(0.0f, 0.0f, 0.0f);
-            float buildingAngle = 0.0f;
-
-            if (currentGridType == GridType.main)
-            {
-                if (currentHoverGizmo == null) currentHoverGizmo = Instantiate(currentTargetBuildingScript.gizmo);
-
-                float centX = 0.0f;
-                float centY = 0.0f;
-
-                for (int i = 0; i < targetGridArea.Length; i++)
-                {
-                    centX = centX + targetGridArea[i].coordinates.x;
-                    centY = centY + targetGridArea[i].angle;
-                }
-
-                centX = 0.0f - (targetGridArea[0].parentGrid.parentVagon.Length / 2) + centX / targetGridArea.Length + 0.5f;
-                centY /= targetGridArea.Length;
-
-                buildingAngle = centY;
-
-                Vagon targetVagon = targetGridArea[0].parentGrid.parentVagon;
-
-                buildingCenter = new Vector3(centX, Mathf.Cos(centY) * targetVagon.Radius, -Mathf.Sin(centY) * targetVagon.Radius);
-
-                currentHoverGizmo.transform.parent = targetVagon.transform;
-                currentHoverGizmo.transform.localPosition = buildingCenter;
-
-                transform.localRotation = Quaternion.identity;
-                ;
-            } //calculating the center of the building for buildings
-            else
-            {
-                buildingCenter = targetGridArea[0].cellCenter;
-            }//getting the center of the cell for roads and crosses
-
-            #endregion
+            #endregion    
 
             #region If button is pressed, call building request
-            if (!isOccupied && Input.GetMouseButtonDown(0))
+            if (!isOccupied && Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 BuildRequest(targetGridArea, buildingCenter, buildingAngle); //request building in the target area an target center
             }
-            else if (isOccupied && Input.GetMouseButtonDown(0))
+            else if (isOccupied && Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 uiManager.LogRequest("BuildError","Space is occupied");
             }
@@ -204,14 +248,15 @@ public class BuildingSystem : MonoBehaviour
     /// </summary>
     public void ClearOldArea()
     {
-        if (oldTargetGridArea != null)
+        if (targetGridAreaCash != null)
         {
-            foreach (GridCell gridCell in oldTargetGridArea)
+            foreach (GridCell gridCell in targetGridAreaCash)
             {
                 gridCell.material.SetInt("isHovered", 0);
-                if (!gridCell.IsOccupied) gridCell.material.SetInt("isOccupied", 0);
+                gridCell.material.SetFloat("Opacity", 0.1f);
             }
         }//returning materials of the previous grid back to normal
+
     }
 
     /// <summary>
@@ -234,7 +279,7 @@ public class BuildingSystem : MonoBehaviour
 
             foreach (VagonGrid grid in targetVagon.Grids)
             {
-                if (grid.gridType == currentGridType) targetGrid = grid;
+                if (grid.gridType == CurrentGridType) targetGrid = grid;
             }
 
             if (targetGrid == null) return null; //stop if no grid found
@@ -242,7 +287,7 @@ public class BuildingSystem : MonoBehaviour
             float hitX = Mathf.Clamp(localHitPoint.x.Remap(-targetVagon.Length / 2.0f, targetVagon.Length / 2.0f, 0.0f, targetGrid.actualRows - 1.0f), 0.0f, targetGrid.actualRows - 1.0f); //getting an X coordinate of the cell by remaping the position of the hit to local coordinates of the 
             float hitY = localHitPoint.z <= 0.0f ? Vector3.Angle(targetVagon.transform.up, vagonHit) : 360.0f - Vector3.Angle(targetVagon.transform.up, vagonHit); //for anges greater than 180 
 
-            if (currentGridType == GridType.main)
+            if (CurrentGridType == GridType.main)
             {
                 targetedGridArea = GetGridArea(new Vector2(hitX, hitY), new Vector2(sizeX, sizeY), targetGrid);
             }
@@ -263,8 +308,8 @@ public class BuildingSystem : MonoBehaviour
                 }
             } //if a road or a cross, return a single cell
 
-            Debug.DrawRay(targetVagon.transform.position, targetVagon.transform.up * 100.0f);
-            Debug.DrawRay(targetVagon.transform.position, vagonHit, Color.red);
+            //Debug.DrawRay(targetVagon.transform.position, targetVagon.transform.up * 100.0f);
+            //Debug.DrawRay(targetVagon.transform.position, vagonHit, Color.red);
 
         } //if succesfully found a vagon
 
@@ -275,8 +320,9 @@ public class BuildingSystem : MonoBehaviour
     /// </summary>
     /// <param name="targetCoordinates">Center coordinate of the area requested</param>
     /// <param name="targetGrid"></param>
+    /// <param name="allowXOversize">If true, will not return null if the area is out of X bounds</param>
     /// <returns></returns>
-    GridCell[] GetGridArea(Vector3 targetCoordinates, Vector2 size, VagonGrid targetGrid)
+    GridCell[] GetGridArea(Vector3 targetCoordinates, Vector2 size, VagonGrid targetGrid, bool allowXOversize = false)
     {
         if (size.x > targetGrid.actualRows) size.x = targetGrid.actualRows;
         if (size.y > targetGrid.parentVagon.SegmentsAmmount) size.y = targetGrid.parentVagon.SegmentsAmmount;
@@ -288,18 +334,22 @@ public class BuildingSystem : MonoBehaviour
         float hitY = targetCoordinates.y;
 
         int minX = Mathf.RoundToInt(hitX - ((size.x - 1.0f) / 2.0f));
-        if (minX < 0 || minX + size.x > targetVagon.RowsAmmount)
+        int maxX = Mathf.RoundToInt(minX + size.x);
+        if ((minX < 0 || maxX > targetVagon.RowsAmmount) && !allowXOversize)
         {
             ClearOldArea();
             return null; //if out of bounds return null
         }
+        else if (minX < 0) { minX = 0; }
+        else if (maxX > targetVagon.RowsAmmount) { maxX = targetVagon.RowsAmmount; }
+
         int minY = Mathf.RoundToInt((hitY / (360.0f / targetVagon.SegmentsAmmount)) - ((size.y - 1.0f) / 2.0f));
 
         int index = 0;
 
         targetedGridArea = new GridCell[(int)(size.x * size.y)];
 
-        for (int x = minX; x < minX + size.x; x++)
+        for (int x = minX; x < maxX; x++)
         {
             for (int y = minY; y < minY + size.y; y++)
             {
@@ -328,9 +378,26 @@ public class BuildingSystem : MonoBehaviour
             gridCell.material.SetInt("isOccupied", 1);
         }
 
-        GameObject targetBuilding = Instantiate(currentTargetBuilding);
-        targetBuilding.transform.position = buildingCenter;
-        currentTargetBuildingScript.angle = angle;
+        GameObject targetBuilding = Instantiate(CurrentTargetBuilding.gameObject);
+        targetBuilding.transform.parent = targetGridArea[0].parentGrid.gridBuildingsHolder.transform;
+
+        targetBuilding.transform.localPosition = buildingCenter;
+
+        switch (CurrentGridType)
+        {
+            case GridType.main:
+                targetBuilding.transform.localRotation = angle > Mathf.PI ? Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)) : Quaternion.Euler(new Vector3(angle * 180 / Mathf.PI, 180, 0));
+                break;
+            case GridType.road:
+                Debug.Log(targetGridAreaCash[0].coordinates);
+                targetBuilding.transform.localRotation = targetGridArea[0].coordinates.x % 2 == 0 ? Quaternion.Euler(new Vector3(0, 90, -angle * 180 / Mathf.PI)) : Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0));
+                break;
+            case GridType.cross:
+                targetBuilding.transform.localRotation = Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0));
+                break;
+        } //setting the rotation according to the type of the building
+
+        CurrentTargetBuilding.angle = angle;
     }
 
 }
