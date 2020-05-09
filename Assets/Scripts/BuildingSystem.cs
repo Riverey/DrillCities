@@ -148,49 +148,15 @@ public class BuildingSystem : MonoBehaviour
             targetGridAreaCash = targetGridArea; //storing the current gridArea in the old Area
             bool isOccupied = false; //use to store info about current target area
             VagonGrid targetGrid = targetGridArea[0].parentGrid;
-            Vagon targetVagon = targetGrid.parentVagon;           
+            Vagon targetVagon = targetGrid.parentVagon;
 
-            #region Calculating the center of the target area and displaying gizmo
-            Vector3 buildingCenter = new Vector3(0.0f, 0.0f, 0.0f);
-            float buildingAngle = 0.0f;
+            #region Calculating the center of the target area
+            Vector4 centerAndAngle = FindCenterAndAngleGromArea(targetGridArea);
+            Vector3 buildingCenter = new Vector3(centerAndAngle.x, centerAndAngle.y, centerAndAngle.z);
+            float buildingAngle = centerAndAngle.z;
+            #endregion
 
-            if (CurrentGridType == GridType.main)
-            {
-                float centX = 0.0f;
-                float centY = 0.0f;
-
-                string debugString = "";
-
-                for (int i = 0; i < targetGridArea.Length; i++)
-                {
-                    centX = centX + targetGridArea[i].coordinates.x;
-
-                    if (targetGridArea[0].angle - targetGridArea[i].angle < Mathf.PI)
-                    {
-                        centY = centY - (2 * Mathf.PI - targetGridArea[i].angle);
-                    } //checking if the object is on the edge
-                    else centY = centY + targetGridArea[i].angle; //if not on the edge - all cool, proceed to adding and averaging angles
-                }
-
-                centX = 0.0f - (targetGridArea[0].parentGrid.parentVagon.Length / 2) + centX / targetGridArea.Length + 0.5f;
-
-                centY /= targetGridArea.Length;
-
-                if (centY < 0) centY = 2 * Mathf.PI + centY;
-
-                //Debug.Log(debugString + " / " + centY);
-
-                buildingAngle = centY;
-
-                buildingCenter = new Vector3(centX, Mathf.Cos(centY) * targetVagon.Radius, -Mathf.Sin(centY) * targetVagon.Radius);
-                ;
-            } //calculating the center of the building for buildings
-            else
-            {
-                buildingCenter = targetGridArea[0].cellCenter;
-                buildingAngle = targetGridArea[0].angle;
-            }//getting the center of the cell for roads and crosses
-
+            #region Displaying gizmo
             if (drawGizmos)
             {
                 if (currentHoverGizmo == null) currentHoverGizmo = Instantiate(CurrentTargetBuilding.gizmo);
@@ -210,9 +176,7 @@ public class BuildingSystem : MonoBehaviour
                         break;
                 } //setting the rotation according to the type of the building
             }
-
             #endregion
-
 
             #region Checking if all cells are unoccupied
             foreach (GridCell gridCell in targetGridArea)
@@ -242,6 +206,55 @@ public class BuildingSystem : MonoBehaviour
         else if (currentHoverGizmo != null) DestroyImmediate(currentHoverGizmo);
 
     } //if isBuilding is true, this code will do the building update
+
+    /// <summary>
+    /// Methode used to generate a center of a grid cell area as well as the appropriate cylinder angle. Angle is stored as z component of the vector
+    /// </summary>
+    /// <param name="targetGridArea"></param>
+    /// <returns></returns>
+    public Vector4 FindCenterAndAngleGromArea (GridCell[] targetGridArea)
+    {
+        Vector3 buildingCenter;
+        float buildingAngle;
+        Vagon targetVagon = targetGridArea[0].parentGrid.parentVagon;
+
+        if (CurrentGridType == GridType.main)
+        {
+            float centX = 0.0f;
+            float centY = 0.0f;
+
+            for (int i = 0; i < targetGridArea.Length; i++)
+            {
+                centX = centX + targetGridArea[i].coordinates.x;
+
+                if (targetGridArea[0].angle - targetGridArea[i].angle < Mathf.PI)
+                {
+                    centY = centY - (2 * Mathf.PI - targetGridArea[i].angle);
+                } //checking if the object is on the edge
+                else centY = centY + targetGridArea[i].angle; //if not on the edge - all cool, proceed to adding and averaging angles
+            }
+
+            centX = 0.0f - (targetGridArea[0].parentGrid.parentVagon.Length / 2) + centX / targetGridArea.Length + 0.5f;
+
+            centY /= targetGridArea.Length;
+
+            if (centY < 0) centY = 2 * Mathf.PI + centY;
+
+            //Debug.Log(debugString + " / " + centY);
+
+            buildingAngle = centY;
+
+            buildingCenter = new Vector3(centX, Mathf.Cos(centY) * targetVagon.Radius, -Mathf.Sin(centY) * targetVagon.Radius);
+            ;
+        } //calculating the center of the building for buildings
+        else
+        {
+            buildingCenter = targetGridArea[0].cellCenter;
+            buildingAngle = targetGridArea[0].angle;
+        }//getting the center of the cell for roads and crosses
+
+        return new Vector4(buildingCenter.x, buildingCenter.y, buildingCenter.z, buildingAngle);
+    }
 
     /// <summary>
     /// Clear the 2d array with GridCells
