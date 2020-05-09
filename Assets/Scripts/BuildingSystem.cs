@@ -153,7 +153,7 @@ public class BuildingSystem : MonoBehaviour
             #region Calculating the center of the target area
             Vector4 centerAndAngle = FindCenterAndAngleGromArea(targetGridArea);
             Vector3 buildingCenter = new Vector3(centerAndAngle.x, centerAndAngle.y, centerAndAngle.z);
-            float buildingAngle = centerAndAngle.z;
+            float buildingAngle = centerAndAngle.w;
             #endregion
 
             #region Displaying gizmo
@@ -225,13 +225,13 @@ public class BuildingSystem : MonoBehaviour
 
             for (int i = 0; i < targetGridArea.Length; i++)
             {
-                centX = centX + targetGridArea[i].coordinates.x;
+                centX += targetGridArea[i].coordinates.x;
 
                 if (targetGridArea[0].angle - targetGridArea[i].angle < Mathf.PI)
                 {
                     centY = centY - (2 * Mathf.PI - targetGridArea[i].angle);
                 } //checking if the object is on the edge
-                else centY = centY + targetGridArea[i].angle; //if not on the edge - all cool, proceed to adding and averaging angles
+                else centY += targetGridArea[i].angle; //if not on the edge - all cool, proceed to adding and averaging angles
             }
 
             centX = 0.0f - (targetGridArea[0].parentGrid.parentVagon.Length / 2) + centX / targetGridArea.Length + 0.5f;
@@ -385,12 +385,6 @@ public class BuildingSystem : MonoBehaviour
 
     void BuildRequest(GridCell[] targetGridArea, Vector3 buildingCenter, float angle)
     {
-        foreach (GridCell gridCell in targetGridArea)
-        {
-            gridCell.IsOccupied = true;
-            gridCell.material.SetInt("isOccupied", 1);
-        }
-
         GameObject spawnedBuilding = Instantiate(CurrentTargetBuilding.gameObject);
         spawnedBuilding.transform.parent = targetGridArea[0].parentGrid.gridBuildingsHolder.transform;
         spawnedBuilding.transform.localPosition = buildingCenter;
@@ -412,6 +406,12 @@ public class BuildingSystem : MonoBehaviour
         spawnedBuildingScript.angle = angle;
         spawnedBuildingScript.ParentGrid = targetGridArea[0].parentGrid;
 
+        foreach (GridCell gridCell in targetGridArea)
+        {
+            gridCell.IsOccupied = true;
+            gridCell.material.SetInt("isOccupied", 1);
+            gridCell.building = spawnedBuildingScript;
+        }
     }
 
 }

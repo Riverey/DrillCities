@@ -11,6 +11,7 @@ public class GridBuilding : MonoBehaviour
     public float angle;
     
     private GridCell[] parentCells;
+
     [HideInInspector]
     public List<BuildingModule> spawnedBuildingModules; //this list is used to store all nested Building Modules
     private VagonGrid parentGrid;

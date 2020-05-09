@@ -23,4 +23,9 @@ public class Building : GridBuilding
         } //while there are less modules then desired ammount, keep trying to spawn at a random Building Point
         
     }
+
+    void DetectOccupiedRoads ()
+    {
+
+    }
 }
