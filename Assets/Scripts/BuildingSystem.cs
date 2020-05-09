@@ -52,7 +52,7 @@ public class BuildingSystem : MonoBehaviour
     public GridType CurrentGridType { get => currentGridType; set => currentGridType = value; }
 
     private GridBuilding currentTargetBuilding;
-    public GridBuilding CurrentTargetBuilding { get => currentTargetBuilding; set { currentTargetBuilding = value; CurrentGridType = currentTargetBuilding.gridType; } }
+    public GridBuilding CurrentTargetBuilding { get => currentTargetBuilding; set { currentTargetBuilding = value; if (value != null) { CurrentGridType = currentTargetBuilding.gridType; } } }
 
     enum CurrentBuildState { none, building, demolishing } //current state of the Building System
     private CurrentBuildState CurrentBuildState1 { get; set; } = CurrentBuildState.none;
@@ -378,26 +378,27 @@ public class BuildingSystem : MonoBehaviour
             gridCell.material.SetInt("isOccupied", 1);
         }
 
-        GameObject targetBuilding = Instantiate(CurrentTargetBuilding.gameObject);
-        targetBuilding.transform.parent = targetGridArea[0].parentGrid.gridBuildingsHolder.transform;
-
-        targetBuilding.transform.localPosition = buildingCenter;
-
+        GameObject spawnedBuilding = Instantiate(CurrentTargetBuilding.gameObject);
+        spawnedBuilding.transform.parent = targetGridArea[0].parentGrid.gridBuildingsHolder.transform;
+        spawnedBuilding.transform.localPosition = buildingCenter;
         switch (CurrentGridType)
         {
             case GridType.main:
-                targetBuilding.transform.localRotation = angle > Mathf.PI ? Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0)) : Quaternion.Euler(new Vector3(angle * 180 / Mathf.PI, 180, 0));
+                spawnedBuilding.transform.localRotation = angle > Mathf.PI ? Quaternion.Euler(new Vector3(angle * 180 / Mathf.PI, 180, 0)) : Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0));
                 break;
             case GridType.road:
                 Debug.Log(targetGridAreaCash[0].coordinates);
-                targetBuilding.transform.localRotation = targetGridArea[0].coordinates.x % 2 == 0 ? Quaternion.Euler(new Vector3(0, 90, -angle * 180 / Mathf.PI)) : Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0));
+                spawnedBuilding.transform.localRotation = targetGridArea[0].coordinates.x % 2 == 0 ? Quaternion.Euler(new Vector3(0, 90, -angle * 180 / Mathf.PI)) : Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0));
                 break;
             case GridType.cross:
-                targetBuilding.transform.localRotation = Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0));
+                spawnedBuilding.transform.localRotation = Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0));
                 break;
         } //setting the rotation according to the type of the building
 
-        CurrentTargetBuilding.angle = angle;
+        GridBuilding spawnedBuildingScript = spawnedBuilding.GetComponent<GridBuilding>();
+        spawnedBuildingScript.angle = angle;
+        spawnedBuildingScript.ParentGrid = targetGridArea[0].parentGrid;
+
     }
 
 }
