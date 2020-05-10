@@ -25,12 +25,15 @@ public class GridCell
 [System.Serializable]
 public class VagonGrid
 {
-    public Vagon parentVagon; //store a link to the parent vagon script
     public string gridName;
+    [HideInInspector]
+    public bool autoSpawn;
+    public Vagon parentVagon; //store a link to the parent vagon script
     public GridType gridType;
     public GameObject gridHolder; //game object to store all drid objects in for organisation
     public GameObject cellObject; //place to store a prefab for this grid
     public GameObject gridBuildingsHolder;
+    [HideInInspector] 
     public int actualRows;
     public GridCell[,] grid; //2d array used to store grid cells
 }
@@ -64,6 +67,8 @@ public class BuildingSystem : MonoBehaviour
 
     public int hoverShadowSize = 3;
     public bool drawGizmos = false;
+
+    public static List<List<GridCell>> elevators = new List<List<GridCell>>();
 
     private void Start()
     {
@@ -133,7 +138,6 @@ public class BuildingSystem : MonoBehaviour
             }
         } //if called when isBuilding already active and without passing a building, flip back to inactive state
     }
-
 
     void BuildingUpdate()
     {
@@ -213,7 +217,7 @@ public class BuildingSystem : MonoBehaviour
     /// </summary>
     /// <param name="targetGridArea"></param>
     /// <returns></returns>
-    public Vector4 FindCenterAndAngleGromArea (GridCell[] targetGridArea)
+    public static Vector4 FindCenterAndAngleGromArea (GridCell[] targetGridArea)
     {
         Vector3 buildingCenter;
         float buildingAngle;
@@ -341,7 +345,7 @@ public class BuildingSystem : MonoBehaviour
         if (size.x > targetGrid.actualRows) size.x = targetGrid.actualRows;
         if (size.y > targetGrid.parentVagon.SegmentsAmmount) size.y = targetGrid.parentVagon.SegmentsAmmount;
 
-        GridCell[] targetedGridArea = null;
+        GridCell[] targetedGridArea;
         Vagon targetVagon = targetGrid.parentVagon;
 
         float hitX = targetCoordinates.x;
@@ -359,27 +363,8 @@ public class BuildingSystem : MonoBehaviour
 
         int minY = Mathf.RoundToInt((hitY / (360.0f / targetVagon.SegmentsAmmount)) - ((size.y - 1.0f) / 2.0f));
 
-        int index = 0;
+        targetedGridArea = GenerateAreaFromGridCellCoords(targetGrid, new Vector2(minX, minY), size);
 
-        targetedGridArea = new GridCell[(int)(size.x * size.y)];
-
-        for (int x = minX; x < maxX; x++)
-        {
-            for (int y = minY; y < minY + size.y; y++)
-            {
-                int tempY = y;
-                if (y < 0)
-                {
-                    tempY = targetVagon.SegmentsAmmount + y;
-                }
-                else if (y > targetVagon.SegmentsAmmount - 1)
-                {
-                    tempY = y % targetVagon.SegmentsAmmount;
-                }
-                targetedGridArea[index] = targetGrid.grid[x, tempY];
-                Mathf.Clamp(index++, 0, size.x * size.y - 1);
-            }
-        }
         return targetedGridArea;
     }
 
@@ -412,21 +397,27 @@ public class BuildingSystem : MonoBehaviour
                         {
                             foreach (GridCell crossingCell in targetCell.neighborCells)
                             {
-                                if (crossingCell.gridType == GridType.cross && blockedCrossings.Contains(crossingCell))
+                                if (crossingCell.gridType == GridType.cross)
                                 {
-                                    if (crossingCell.IsOccupied)
+                                    if (!blockedCrossings.Contains(crossingCell))
                                     {
-                                        if (crossingCell.building != null) Destroy(crossingCell.building.gameObject);
+                                        blockedCrossings.Add(crossingCell);
                                     }
-                                    crossingCell.IsOccupied = true;
-                                    ((Building)spawnedBuildingScript).blockedCrossings.Add(crossingCell);
-                                    blockedCrossings.Remove(crossingCell);
+                                    else
+                                    {
+                                        if (crossingCell.IsOccupied)
+                                        {
+                                            if (crossingCell.building != null) Destroy(crossingCell.building.gameObject);
+                                        }
+                                        crossingCell.IsOccupied = true;
+                                        ((Building)spawnedBuildingScript).blockedCrossings.Add(crossingCell);
+                                        blockedCrossings.Remove(crossingCell);
+                                    }
                                 }
-                                else blockedCrossings.Add(crossingCell);
                             }
                             if (targetCell.IsOccupied)
                             {
-                                Destroy(targetCell.building.gameObject);
+                                ((Road)targetCell.building).RequestDestroy();
                             }
                             targetCell.IsOccupied = true;
                             connectedRoads.Remove(targetCell);
@@ -434,6 +425,7 @@ public class BuildingSystem : MonoBehaviour
                         } //if encountered more then once, remove from the connected array and set isOccupied to true
                         else connectedRoads.Add(targetCell);
                     }
+
                     if (spawnedBuildingScript.ParentCells == null) spawnedBuildingScript.ParentCells = new List<GridCell>();
 
                     spawnedBuildingScript.ParentCells.Add(cell);
@@ -449,6 +441,7 @@ public class BuildingSystem : MonoBehaviour
                 break;
             case GridType.cross:
                 spawnedBuilding.transform.localRotation = Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0));
+
                 break;
         } //setting the rotation according to the type of the building
 
@@ -460,6 +453,42 @@ public class BuildingSystem : MonoBehaviour
             if (spawnedBuildingScript.ParentCells == null) spawnedBuildingScript.ParentCells = new List<GridCell>(); 
             spawnedBuildingScript.ParentCells.Add(gridCell);
         }
+    }
+
+    /// <summary>
+    /// This methode returns a grid Area based on the coordinates of a first cell
+    /// </summary>
+    /// <param name="targetGrid"></param>
+    /// <param name="coordinates"></param>
+    /// <param name="size"></param>
+    public static GridCell[] GenerateAreaFromGridCellCoords(VagonGrid targetGrid, Vector2 coordinates, Vector2 size)
+    {
+        GridCell[] targetedGridArea = new GridCell[(int)(size.x * size.y)];
+
+        Vagon targetVagon = targetGrid.parentVagon;
+        int minX = (int)coordinates.x;
+        int minY = (int)coordinates.y;
+        int maxX = Mathf.RoundToInt(minX + size.x);
+        int index = 0;
+
+        for (int x = minX; x < maxX; x++)
+        {
+            for (int y = minY; y < minY + size.y; y++)
+            {
+                int tempY = y;
+                if (y < 0)
+                {
+                    tempY = targetVagon.SegmentsAmmount + y;
+                }
+                else if (y > targetVagon.SegmentsAmmount - 1)
+                {
+                    tempY = y % targetVagon.SegmentsAmmount;
+                }
+                targetedGridArea[index] = targetGrid.grid[x, tempY];
+                Mathf.Clamp(index++, 0, size.x * size.y - 1);
+            }
+        }
+        return targetedGridArea;
     }
 
 }

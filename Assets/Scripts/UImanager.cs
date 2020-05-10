@@ -23,6 +23,16 @@ public class UImanager : MonoBehaviour
     void Update()
     {
         TrainDiagram();
+        //if (!BuildingSystem.isBuilding) BuildingRaycast();
+    }
+
+    void BuildingRaycast()
+    {
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit targetHitPoint, MouseOrbitImproved.distance + 10f, 10))
+        {
+            Debug.Log(targetHitPoint.collider.gameObject.name);
+        }
+        
     }
 
     void TrainDiagram()

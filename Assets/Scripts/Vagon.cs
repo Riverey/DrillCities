@@ -24,6 +24,17 @@ public class Vagon : MonoBehaviour
 
     [SerializeField] private VagonGrid[] grids; public VagonGrid[] Grids { get => grids; set => grids = value; }
 
+    [System.Serializable]
+    public class BuildingStartSpawn
+    {
+        public GameObject buildingPrefab;
+        public Vector2 desiredStartCell;
+    }
+    [SerializeField]
+    public List<BuildingStartSpawn> buildingsToSpawnOnStart;
+
+    public GameObject elevatorCabin;
+
     private void Start()
     {
         RecalculateVariables();
@@ -34,7 +45,8 @@ public class Vagon : MonoBehaviour
         }
 
         BuildingSystem.allVagons.Add(this);
-        
+
+        SpawnAtStart();
     }
 
     /// <summary>
@@ -275,6 +287,46 @@ public class Vagon : MonoBehaviour
     {
         point = transform.TransformPoint(point);
         return point;
+    }
+
+    void SpawnAtStart()
+    {
+        foreach (BuildingStartSpawn spawn in buildingsToSpawnOnStart)
+        {
+            VagonGrid targetGrid = null;
+            GridBuilding targetGridBuildingScript = spawn.buildingPrefab.GetComponent<GridBuilding>();
+            GridCell[] targetedGridArea;
+            foreach (VagonGrid grid in grids)
+            {
+                if (grid.gridType == targetGridBuildingScript.gridType)
+                {
+                    targetGrid = grid;
+                    break;
+                } //getting first matching grid. #tooptimize
+            }
+            if (targetGrid != null)
+            {
+                if (targetGrid.gridType == GridType.main) targetedGridArea = BuildingSystem.GenerateAreaFromGridCellCoords(targetGrid, spawn.desiredStartCell, ((Building)targetGridBuildingScript).size);
+                else targetedGridArea = BuildingSystem.GenerateAreaFromGridCellCoords(targetGrid, spawn.desiredStartCell, new Vector2(1, 1));
+
+                Vector4 centerAndAngle;
+                if (targetedGridArea != null) centerAndAngle = BuildingSystem.FindCenterAndAngleGromArea(targetedGridArea);
+                else break;
+
+                Vector3 buildingCenter;
+                float buildingAngle;
+
+                if (centerAndAngle != null) 
+                { 
+                    buildingCenter = new Vector3(centerAndAngle.x, centerAndAngle.y, centerAndAngle.z); 
+                    buildingAngle = centerAndAngle.w;
+                    BuildingSystem.BuildRequest(targetedGridArea, buildingCenter, buildingAngle, targetGridBuildingScript);
+                }
+                else break;
+
+            }
+            else break;
+        }
     }
 }
 

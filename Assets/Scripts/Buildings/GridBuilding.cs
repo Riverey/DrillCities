@@ -20,7 +20,12 @@ public class GridBuilding : MonoBehaviour
     private List<GridCell> parentCells;
     public List<GridCell> ParentCells { get => parentCells; set => parentCells = value; }
 
-   
-
-    
+    public void unnoccupyCells()
+    {
+        foreach (GridCell cell in ParentCells)
+        {
+            cell.IsOccupied = false;
+            cell.building = null;
+        }
+    }
 }
