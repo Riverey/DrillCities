@@ -28,6 +28,11 @@ public class Vagon : MonoBehaviour
     {
         RecalculateVariables();
 
+        foreach (VagonGrid grid in grids)
+        {
+            GenerateNeighbors(grid);
+        }
+
         BuildingSystem.allVagons.Add(this);
         
     }
@@ -122,15 +127,15 @@ public class Vagon : MonoBehaviour
                 } //calculating grid row offsets for different types of grids
 
                 Vector3 cellCenterTemp = new Vector3(yOffset, Mathf.Cos(angle) * Radius, -Mathf.Sin(angle) * Radius); //creating a vector for the grid cell coordinates
-                
+
                 grid.grid[i, j] = new GridCell
                 {
                     parentGrid = grid,
                     coordinates = new Vector2(i, j), //storing cell numeric coordinates
                     angle = angle,
-                    cellCenter = cellCenterTemp,
-                    parent = grid.gridHolder.transform,
-                    IsOccupied = false
+                    cellCenter = cellCenterTemp,                    
+                    IsOccupied = false,
+                    gridType = grid.gridType
             }; //creating the Grid Cell and storing it's parameters
 
                 GridCell currentGridCell = grid.grid[i, j];
@@ -156,6 +161,108 @@ public class Vagon : MonoBehaviour
     {
         if (grid.gridHolder != null) DestroyImmediate(grid.gridHolder);
         grid.grid = null; //dumping the previous array
+    }
+
+    /// <summary>
+    /// This methode is used to cycle through grid cells in a specific grid and generating neighbors for them
+    /// </summary>
+    /// <param name="targetGrid"></param>
+    public void GenerateNeighbors(VagonGrid targetGrid)
+    {
+        switch (targetGrid.gridType)
+        {
+            case GridType.main:
+                for (int i = 0; i < targetGrid.actualRows; i++)
+                {
+                    for (int j = 0; j < SegmentsAmmount; j++)
+                    {
+                        GridCell targetGridCell = targetGrid.grid[i, j];
+                        targetGridCell.neighborCells = new List<GridCell>();
+
+                        #region Lokating neighboring roads
+                        VagonGrid targetRoadGrid = null;
+
+                        foreach (VagonGrid grid in grids)
+                        {
+                            if (grid.gridType == GridType.road) { targetRoadGrid = grid; break; }//locating the first road type grid in this vagon and storing it  
+                        }
+
+                        if (targetRoadGrid != null)
+                        {
+                            targetGridCell.neighborCells.Add(targetRoadGrid.grid[2 * i, j]);
+                            targetGridCell.neighborCells.Add(targetRoadGrid.grid[2 * i + 2, j]);
+                            targetGridCell.neighborCells.Add(targetRoadGrid.grid[i * 2 + 1, wrapInt(j, -1)]);
+                            targetGridCell.neighborCells.Add(targetRoadGrid.grid[i * 2 + 1, j]);
+                        }
+                        #endregion
+
+                        foreach (GridCell gridCell in targetGridCell.neighborCells)
+                        {
+                            if (gridCell.neighborCells != null) gridCell.neighborCells.Add(targetGridCell);//add this building to all roads
+                            else { gridCell.neighborCells = new List<GridCell>(); gridCell.neighborCells.Add(targetGridCell); }
+                        }
+
+                        #region Lokating neighboring cells
+                        if (i > 0) targetGridCell.neighborCells.Add(targetGrid.grid[i - 1, j]);
+                        if (i < targetGrid.actualRows - 1) targetGridCell.neighborCells.Add(targetGrid.grid[i + 1, j]);
+                        targetGridCell.neighborCells.Add(targetGrid.grid[i, wrapInt(j, -1)]);
+                        targetGridCell.neighborCells.Add(targetGrid.grid[i, wrapInt(j, 1)]);
+                        #endregion
+                    }
+                }
+                break;
+            case GridType.road:
+                for (int i = 0; i < targetGrid.actualRows; i++)
+                {
+                    for (int j = 0; j < SegmentsAmmount; j++)
+                    {
+                        GridCell targetGridCell = targetGrid.grid[i, j];
+                        targetGridCell.neighborCells = new List<GridCell>();
+                        VagonGrid targetCrossGrid = null;
+
+                        foreach (VagonGrid grid in grids)
+                        {
+                            if (grid.gridType == GridType.cross) { targetCrossGrid = grid; break; }//locating the first road type grid in this vagon and storing it  
+                        }
+
+                        #region Locating neighboring roads
+                        if (targetGridCell.coordinates.x % 2 == 0)
+                        {
+                            if (i > 0) { targetGridCell.neighborCells.Add(targetGrid.grid[i - 1, j]); targetGridCell.neighborCells.Add(targetGrid.grid[i - 1, wrapInt(j, - 1)]); }
+                            targetGridCell.neighborCells.Add(targetGrid.grid[i, wrapInt(j, 1)]);
+                            targetGridCell.neighborCells.Add(targetGrid.grid[i, wrapInt(j, -1)]);
+                            if (i < targetGrid.actualRows - 1) { targetGridCell.neighborCells.Add(targetGrid.grid[i + 1, j]); targetGridCell.neighborCells.Add(targetGrid.grid[i + 1, wrapInt(j, -1)]); }
+
+                            targetGridCell.neighborCells.Add(targetCrossGrid.grid[i / 2, wrapInt(j, -1)]);
+                            targetGridCell.neighborCells.Add(targetCrossGrid.grid[i / 2, j]);
+                        }
+                        else
+                        {
+                            if (i > 1) { targetGridCell.neighborCells.Add(targetGrid.grid[i - 2, j]); }
+                            targetGridCell.neighborCells.Add(targetGrid.grid[i - 1, j]); targetGridCell.neighborCells.Add(targetGrid.grid[i - 1, wrapInt(j, 1)]);
+                            if (i < targetGrid.actualRows - 2) { targetGridCell.neighborCells.Add(targetGrid.grid[i + 2, j]); }
+                            if (i < targetGrid.actualRows - 1) { targetGridCell.neighborCells.Add(targetGrid.grid[i + 1, j]); targetGridCell.neighborCells.Add(targetGrid.grid[i + 1, wrapInt(j, 1)]); }
+                            
+                            targetGridCell.neighborCells.Add(targetCrossGrid.grid[(i - 1) / 2, j]);
+                            targetGridCell.neighborCells.Add(targetCrossGrid.grid[(i - 1) / 2 + 1, j]);
+                        }
+                        #endregion
+                    }
+                }
+                
+                        break;
+            case GridType.cross:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public int wrapInt(int target, int direction)
+    {
+        if (direction > 0) target = target < SegmentsAmmount - 1 ? target + 1 : 0;
+        else if (direction < 0) target = target > 0 ? target - 1 : SegmentsAmmount - 1;
+        return target;
     }
 
     public Vector3 GetLocalCoordinates(Vector3 point)

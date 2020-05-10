@@ -9,6 +9,10 @@ public class Building : GridBuilding
     public List<BuildingModule> initialBuildingModulesPool; //use this list to store building modules that has to be spawned initially
     public int initialBuildingModulesAmmount;
 
+    public List<GridCell> connectedRoads = new List<GridCell>();
+    public List<GridCell> blockedRoads = new List<GridCell>();
+    public List<GridCell> blockedCrossings = new List<GridCell>();
+
     private void Start()
     {
         SpawnInitialModules();
@@ -24,8 +28,11 @@ public class Building : GridBuilding
         
     }
 
-    void DetectOccupiedRoads ()
+    void DetectOccupiedRoads (GridCell[] gridCells)
     {
-
+        for (int i = 0; i < gridCells.Length; i++)
+        {
+            //look up all neighbors of cells and if some of them are stored more then twice, mark them as
+        }
     }
 }

@@ -8,15 +8,17 @@ public class GridBuilding : MonoBehaviour
 
     public GameObject gizmo;
 
+    [HideInInspector]
     public float angle;
     
-    private GridCell[] parentCells;
+    
 
     [HideInInspector]
     public List<BuildingModule> spawnedBuildingModules; //this list is used to store all nested Building Modules
     private VagonGrid parentGrid;
     public VagonGrid ParentGrid { get => parentGrid; set => parentGrid = value; }
-    public GridCell[] ParentCells { get => parentCells; set => parentCells = value; }
+    private List<GridCell> parentCells;
+    public List<GridCell> ParentCells { get => parentCells; set => parentCells = value; }
 
    
 

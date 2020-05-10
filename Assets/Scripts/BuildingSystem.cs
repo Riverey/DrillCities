@@ -1,20 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 [System.Serializable]
 public class GridCell
 {
+    public GridType gridType;
     public VagonGrid parentGrid; //store parent grid of the cell
     public Vector2 coordinates;
+    public Vector3 cellCenter; //transform of the cell regarding to the Vagon body
     public float angle;
     public GameObject cellGizmo; //associated gizmo object
-    public Vector3 cellCenter; //transform of the cell regarding to the Vagon body
-    public Transform parent;
     private bool isOccupied;
     public bool IsOccupied { get => isOccupied; set { isOccupied = value; if (material != null) { int i = isOccupied ? 1 : 2; material.SetInt("isOccupied", i); if (cellGizmo != null) { cellGizmo.gameObject.GetComponentInChildren<MeshRenderer>().sortingOrder = isOccupied ? 1 : 2; } } } }
-    public bool isBlocked; //use for cells that are blocked but something non-removable like leg pillars or roads inside buildings
     public GridBuilding building; //reference to the building that is built on this cel
+    public List<GridCell> neighborCells;
     public Material material;   
 } //a class to contain information about cells
 
@@ -44,15 +45,15 @@ public class BuildingSystem : MonoBehaviour
     public static List<GridBuilding> allBuildings;
 
     [System.Serializable] public class BuildingType { public GridBuilding[] buildings; }
-    public List<BuildingType> buildings;
+    public static List<BuildingType> buildings;
 
-    public bool isBuilding = false;
+    public static bool isBuilding = false;
     
-    private GridType currentGridType = GridType.main;
-    public GridType CurrentGridType { get => currentGridType; set => currentGridType = value; }
+    private static GridType currentGridType = GridType.main;
+    public static GridType CurrentGridType { get => currentGridType; set => currentGridType = value; }
 
-    private GridBuilding currentTargetBuilding;
-    public GridBuilding CurrentTargetBuilding { get => currentTargetBuilding; set { currentTargetBuilding = value; if (value != null) { CurrentGridType = currentTargetBuilding.gridType; } } }
+    private static GridBuilding currentTargetBuilding;
+    public static GridBuilding CurrentTargetBuilding { get => currentTargetBuilding; set { currentTargetBuilding = value; if (value != null) { CurrentGridType = currentTargetBuilding.gridType; } } }
 
     enum CurrentBuildState { none, building, demolishing } //current state of the Building System
     private CurrentBuildState CurrentBuildState1 { get; set; } = CurrentBuildState.none;
@@ -138,8 +139,8 @@ public class BuildingSystem : MonoBehaviour
     {
         ClearOldArea();
         GridCell[] targetGridArea = null;
-        Vector2 targetSize = new Vector2(((Building)CurrentTargetBuilding).size.x, ((Building)CurrentTargetBuilding).size.y);
-        if (CurrentGridType == GridType.main) targetGridArea = VagonRaycast(targetSize.x, targetSize.y);
+
+        if (CurrentGridType == GridType.main) { Vector2 targetSize = new Vector2(((Building)CurrentTargetBuilding).size.x, ((Building)CurrentTargetBuilding).size.y);  targetGridArea = VagonRaycast(targetSize.x, targetSize.y); }
         else targetGridArea = VagonRaycast();
 
         if (targetGridArea != null) 
@@ -383,18 +384,67 @@ public class BuildingSystem : MonoBehaviour
     }
 
 
-    void BuildRequest(GridCell[] targetGridArea, Vector3 buildingCenter, float angle)
+    public static void BuildRequest(GridCell[] targetGridArea, Vector3 buildingCenter, float angle, GridBuilding directBuildingSpawn = null)
     {
-        GameObject spawnedBuilding = Instantiate(CurrentTargetBuilding.gameObject);
+        GameObject spawnedBuilding = directBuildingSpawn == null ? Instantiate(CurrentTargetBuilding.gameObject) : Instantiate(directBuildingSpawn.gameObject);
         spawnedBuilding.transform.parent = targetGridArea[0].parentGrid.gridBuildingsHolder.transform;
         spawnedBuilding.transform.localPosition = buildingCenter;
-        switch (CurrentGridType)
+
+        GridBuilding spawnedBuildingScript = spawnedBuilding.GetComponent<GridBuilding>();
+        spawnedBuildingScript.angle = angle;
+        spawnedBuildingScript.ParentGrid = targetGridArea[0].parentGrid;
+
+        GridType tempGridType = directBuildingSpawn == null ? CurrentGridType : directBuildingSpawn.gridType;
+
+        switch (tempGridType)
         {
             case GridType.main:
                 spawnedBuilding.transform.localRotation = angle > Mathf.PI ? Quaternion.Euler(new Vector3(angle * 180 / Mathf.PI, 180, 0)) : Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0));
+
+                List <GridCell> connectedRoads = new List<GridCell>();
+                List <GridCell> blockedCrossings = new List<GridCell>();
+                foreach (GridCell cell in targetGridArea)
+                {
+                    for (int i = 0; i < 4; i++) //first 4 indexes in the neighbors array are occupied by roads
+                    {
+                        GridCell targetCell = cell.neighborCells[i];
+                        if (connectedRoads.Contains<GridCell>(targetCell)) 
+                        {
+                            foreach (GridCell crossingCell in targetCell.neighborCells)
+                            {
+                                if (crossingCell.gridType == GridType.cross && blockedCrossings.Contains(crossingCell))
+                                {
+                                    if (crossingCell.IsOccupied)
+                                    {
+                                        if (crossingCell.building != null) Destroy(crossingCell.building.gameObject);
+                                    }
+                                    crossingCell.IsOccupied = true;
+                                    ((Building)spawnedBuildingScript).blockedCrossings.Add(crossingCell);
+                                    blockedCrossings.Remove(crossingCell);
+                                }
+                                else blockedCrossings.Add(crossingCell);
+                            }
+                            if (targetCell.IsOccupied)
+                            {
+                                Destroy(targetCell.building.gameObject);
+                            }
+                            targetCell.IsOccupied = true;
+                            connectedRoads.Remove(targetCell);
+                            ((Building)spawnedBuildingScript).blockedRoads.Add(targetCell);
+                        } //if encountered more then once, remove from the connected array and set isOccupied to true
+                        else connectedRoads.Add(targetCell);
+                    }
+                    if (spawnedBuildingScript.ParentCells == null) spawnedBuildingScript.ParentCells = new List<GridCell>();
+
+                    spawnedBuildingScript.ParentCells.Add(cell);
+                } //foreach cell in target cell area, get it's neighbors and check their neighbors. If it was encountered more than once, it's blocked by the building
+                foreach (GridCell cell in connectedRoads)
+                {
+                    ((Building)spawnedBuildingScript).connectedRoads.Add(cell);
+                }
+                
                 break;
             case GridType.road:
-                Debug.Log(targetGridAreaCash[0].coordinates);
                 spawnedBuilding.transform.localRotation = targetGridArea[0].coordinates.x % 2 == 0 ? Quaternion.Euler(new Vector3(0, 90, -angle * 180 / Mathf.PI)) : Quaternion.Euler(new Vector3(-angle * 180 / Mathf.PI, 0, 0));
                 break;
             case GridType.cross:
@@ -402,15 +452,13 @@ public class BuildingSystem : MonoBehaviour
                 break;
         } //setting the rotation according to the type of the building
 
-        GridBuilding spawnedBuildingScript = spawnedBuilding.GetComponent<GridBuilding>();
-        spawnedBuildingScript.angle = angle;
-        spawnedBuildingScript.ParentGrid = targetGridArea[0].parentGrid;
-
         foreach (GridCell gridCell in targetGridArea)
         {
             gridCell.IsOccupied = true;
             gridCell.material.SetInt("isOccupied", 1);
             gridCell.building = spawnedBuildingScript;
+            if (spawnedBuildingScript.ParentCells == null) spawnedBuildingScript.ParentCells = new List<GridCell>(); 
+            spawnedBuildingScript.ParentCells.Add(gridCell);
         }
     }
 
