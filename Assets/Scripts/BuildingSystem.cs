@@ -26,8 +26,6 @@ public class GridCell
 public class VagonGrid
 {
     public string gridName;
-    [HideInInspector]
-    public bool autoSpawn;
     public Vagon parentVagon; //store a link to the parent vagon script
     public GridType gridType;
     public GameObject gridHolder; //game object to store all drid objects in for organisation
@@ -43,6 +41,7 @@ public enum GridType { main, road, cross }
 public class BuildingSystem : MonoBehaviour
 {
     private UImanager uiManager;
+    private ResourseManager resourseManager;
 
     public static List<Vagon> allVagons = new List<Vagon>();
     public static List<GridBuilding> allBuildings;
@@ -73,6 +72,7 @@ public class BuildingSystem : MonoBehaviour
     private void Start()
     {
         uiManager = FindObjectOfType<UImanager>();
+        resourseManager = FindObjectOfType<ResourseManager>();
 
         isBuilding = false;
     }
@@ -285,7 +285,7 @@ public class BuildingSystem : MonoBehaviour
     {
         GridCell[] targetedGridArea = null;
 
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit targetHitPoint, MouseOrbitImproved.distance + 10f) && targetHitPoint.transform.gameObject.tag == "RaycastTarget") //9 is the Vagons layer
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit targetHitPoint, MouseOrbitImproved.distance + 10f, 10) && targetHitPoint.transform.gameObject.tag == "RaycastTarget") //9 is the Vagons layer
         {
             CapsuleCollider colCollider = (CapsuleCollider)targetHitPoint.collider;
             Vagon targetVagon = targetHitPoint.transform.gameObject.GetComponent<Vagon>();
@@ -453,6 +453,8 @@ public class BuildingSystem : MonoBehaviour
             if (spawnedBuildingScript.ParentCells == null) spawnedBuildingScript.ParentCells = new List<GridCell>(); 
             spawnedBuildingScript.ParentCells.Add(gridCell);
         }
+
+        if (spawnedBuildingScript.cost != 0) ResourseManager.purchase(spawnedBuildingScript.cost);
     }
 
     /// <summary>

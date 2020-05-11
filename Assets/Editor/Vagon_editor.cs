@@ -39,15 +39,6 @@ public class Vagon_editor : Editor
     }
 }
 
-[CustomEditor(typeof(ResourseSystem))]
-public class ResourseSystem_editor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        ResourseSystem myResourseSystem = (ResourseSystem)target;
-        EditorGUILayout.LabelField("Name", myResourseSystem.resourseName);
-    }
-}
 
 
 

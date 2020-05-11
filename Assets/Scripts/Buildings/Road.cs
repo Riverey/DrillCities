@@ -155,7 +155,7 @@ public class Road : GridBuilding
 
     public void RequestDestroy()
     {
-        unnoccupyCells();
+        UnnoccupyCells();
         if (elevator != null) elevator.RequestDestroy(this);
         Destroy(gameObject);
     }

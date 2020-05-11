@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class MouseOrbitImproved : MonoBehaviour
 {
@@ -22,22 +23,30 @@ public class MouseOrbitImproved : MonoBehaviour
     public float distanceMin = .5f;
     public float distanceMax = 15f;
 
+    public static Vector2 distanceConstrains;
+
     private Rigidbody rigidbody;
 
     private static float x = 0.0f;
     private static float y = 0.0f;
     private static float z = 0.0f;
 
-    float horizontalMove = 0.0f;
+    private float horizontalMove = 0.0f;
+    public static float HorizontalMove;
 
     private bool isFlipped = false;
     private bool isFlipping = false;
+
+    public static bool IsFlipped;
 
     public Vector3 angles;
 
     public static float X { get => x; }
     public static float Y { get => y; }
     public static float Z { get => z; }
+
+    public Vector2 sideBorders;
+    public static Vector2 SideBorders;
 
     // Use this for initialization
     void Start()
@@ -53,10 +62,15 @@ public class MouseOrbitImproved : MonoBehaviour
         {
             rigidbody.freezeRotation = true;
         }
-    }
+
+        SideBorders = sideBorders;
+
+        distanceConstrains = new Vector2(distanceMin, distanceMax);
+}
 
     void LateUpdate()
     {
+        
         angles = transform.rotation.eulerAngles;
 
         distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel") * zoomSpeed, distanceMin, distanceMax);
@@ -112,6 +126,10 @@ public class MouseOrbitImproved : MonoBehaviour
 
         if (Input.GetAxis("Horizontal") != 0) horizontalMove = horizontalMove + Input.GetAxis("Horizontal") * sideMoveSpeed;
 
+        horizontalMove = Mathf.Clamp(horizontalMove, sideBorders.x, sideBorders.y);
+
+        HorizontalMove = horizontalMove;
+
         rotation = Quaternion.Euler(y, x, z);
 
         Vector3 negDistance = new Vector3(0.0f, 0.0f, -distance);
@@ -125,6 +143,8 @@ public class MouseOrbitImproved : MonoBehaviour
         else { envRotOffset = 50.0f - envRotOffset.Remap(180.0f, 360.0f, 0, 50.0f); }
 
         enviroment.rotation = Quaternion.Euler(y - envRotOffset, 0.0f, 0.0f);
+
+        IsFlipped = isFlipped;
     }
 
     public static float ClampAngle(float angle, float min, float max)

@@ -9,8 +9,13 @@ public class Building : GridBuilding
     public List<BuildingModule> initialBuildingModulesPool; //use this list to store building modules that has to be spawned initially
     public int initialBuildingModulesAmmount;
 
+    public string description;
+    public Sprite imageDescription;
+    [HideInInspector]
     public List<GridCell> connectedRoads = new List<GridCell>();
+    [HideInInspector]
     public List<GridCell> blockedRoads = new List<GridCell>();
+    [HideInInspector]
     public List<GridCell> blockedCrossings = new List<GridCell>();
 
     private void Start()

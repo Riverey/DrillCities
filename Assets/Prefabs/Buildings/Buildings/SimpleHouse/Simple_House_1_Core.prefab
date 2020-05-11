@@ -70,9 +70,11 @@ GameObject:
   - component: {fileID: 2525393474577958511}
   - component: {fileID: 5534171899266758113}
   - component: {fileID: 7816710824249777465}
+  - component: {fileID: 2327165125075959798}
+  - component: {fileID: 1983718574206936511}
   m_Layer: 10
   m_Name: Simple_House_1_Core
-  m_TagString: Untagged
+  m_TagString: UIBuilding
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -109,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66638892defc93d4281f3a96b27e6cc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Simple House
+  name: Basic House
   gridType: 0
   gizmo: {fileID: 2571589805560224271, guid: d7e51613d27a367488b6892cfdd87472, type: 3}
   angle: 0
@@ -123,6 +125,8 @@ MonoBehaviour:
   - {fileID: 732604231675194647}
   - {fileID: 7808589478183910991}
   initialBuildingModulesAmmount: 5
+  description: Basic house that fits a few dozen people.
+  imageDescription: {fileID: 0}
   connectedRoads: []
   blockedRoads: []
   blockedCrossings: []
@@ -139,6 +143,36 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2327165125075959798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2571589805560224271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2031f0db7dddd24d8ce9d051d9638c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  energyConsuption: 5
+  foodConsumption: 10
+  scienceConsumption: 0
+--- !u!114 &1983718574206936511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2571589805560224271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c093856d9cf70045a504112cf15ad81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  energyProduction: 0
+  foodProduction: 0
+  scienceProduction: 2
 --- !u!1 &3439987259777617899
 GameObject:
   m_ObjectHideFlags: 0

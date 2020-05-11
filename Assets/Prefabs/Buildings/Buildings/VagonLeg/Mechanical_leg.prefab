@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 860470446928240302}
   - component: {fileID: 1022444821585291210}
   - component: {fileID: 6439221835511551763}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_31
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 8469002518856319492}
   - component: {fileID: 4700804463088103281}
   - component: {fileID: 1942552899961380420}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 1255160744109886005}
   - component: {fileID: 7279608856772773371}
   - component: {fileID: 853513802011677031}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston_arm_8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 792144936783388773}
   - component: {fileID: 8716188520689624864}
   - component: {fileID: 4320549947710868013}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 7290993004883260846}
   - component: {fileID: 151277577478040875}
   - component: {fileID: 5699111542941983431}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston_hinge_8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 1243326665568614115}
   - component: {fileID: 7263230994950227721}
   - component: {fileID: 1657427220439350103}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mechanical_leg_pCube16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -485,7 +485,7 @@ GameObject:
   - component: {fileID: 401899891914985679}
   - component: {fileID: 3930572064994176754}
   - component: {fileID: 3677331583625581816}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -564,7 +564,7 @@ GameObject:
   - component: {fileID: 2494145980673205432}
   - component: {fileID: 4908520470242419063}
   - component: {fileID: 8887157772970644801}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCylinder37
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -643,7 +643,7 @@ GameObject:
   - component: {fileID: 784113409524472841}
   - component: {fileID: 3183786126635241202}
   - component: {fileID: 6804907091521002355}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston_hinge_2_1 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -722,7 +722,7 @@ GameObject:
   - component: {fileID: 3903537747317776439}
   - component: {fileID: 6548188018841639639}
   - component: {fileID: 8583722383061107914}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -801,7 +801,7 @@ GameObject:
   - component: {fileID: 321801632078571650}
   - component: {fileID: 2200268998051282703}
   - component: {fileID: 7082311965203643736}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_27
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -880,7 +880,7 @@ GameObject:
   - component: {fileID: 9031489666403208593}
   - component: {fileID: 4173899065063493902}
   - component: {fileID: 1023985112001236434}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston_arm_1 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -959,7 +959,7 @@ GameObject:
   - component: {fileID: 2561870643129246269}
   - component: {fileID: 1540419863308998472}
   - component: {fileID: 4652489707453743265}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1038,7 +1038,7 @@ GameObject:
   - component: {fileID: 8166585844820784600}
   - component: {fileID: 620833688934164347}
   - component: {fileID: 4317295033235036055}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1117,7 +1117,7 @@ GameObject:
   - component: {fileID: 6031535185560383097}
   - component: {fileID: 1085902074011259432}
   - component: {fileID: 7410013180196814607}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCylinder15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1196,7 +1196,7 @@ GameObject:
   - component: {fileID: 1303729768495698256}
   - component: {fileID: 6798455338305817455}
   - component: {fileID: 300605778986921972}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCylinder36
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1273,7 +1273,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4090903939591404509}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Steam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1303,7 +1303,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 730814446624291818}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Track
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1377,7 +1377,7 @@ GameObject:
   - component: {fileID: 4315656441156045573}
   - component: {fileID: 6640858625717029522}
   - component: {fileID: 6255301419396987099}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1456,7 +1456,7 @@ GameObject:
   - component: {fileID: 8394545710608105509}
   - component: {fileID: 4809007620470122303}
   - component: {fileID: 171043552341414484}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston_hinge_1 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1535,7 +1535,7 @@ GameObject:
   - component: {fileID: 972856938629488384}
   - component: {fileID: 5739592083766107881}
   - component: {fileID: 3490665323364957852}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1613,7 +1613,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2789037018658050932}
   - component: {fileID: 4558417064939052236}
-  m_Layer: 0
+  - component: {fileID: 2943131398869787282}
+  - component: {fileID: 6042009759524555089}
+  m_Layer: 10
   m_Name: Mechanical_leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1655,9 +1657,40 @@ MonoBehaviour:
   size: {x: 13, y: 3}
   initialBuildingModulesPool: []
   initialBuildingModulesAmmount: 0
+  description: One of the train legs. In future one of the goals would be to power
+    it on.
+  imageDescription: {fileID: 0}
   connectedRoads: []
   blockedRoads: []
   blockedCrossings: []
+--- !u!65 &2943131398869787282
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2537092829351325952}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10.988287, y: 12.145817, z: 2.8307211}
+  m_Center: {x: -0.59891033, y: 5.5729084, z: 0}
+--- !u!114 &6042009759524555089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2537092829351325952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2031f0db7dddd24d8ce9d051d9638c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  energyConsuption: 10
+  foodConsumption: 0
+  scienceConsumption: 0
 --- !u!1 &2721641713677405486
 GameObject:
   m_ObjectHideFlags: 0
@@ -1669,7 +1702,7 @@ GameObject:
   - component: {fileID: 1763318297856275456}
   - component: {fileID: 2802961573202422658}
   - component: {fileID: 273501487735864268}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1748,7 +1781,7 @@ GameObject:
   - component: {fileID: 9042265510143483277}
   - component: {fileID: 6776620713087980026}
   - component: {fileID: 6284381958445446114}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1827,7 +1860,7 @@ GameObject:
   - component: {fileID: 3533825819286588205}
   - component: {fileID: 3951830565808854838}
   - component: {fileID: 9208859393560703554}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston_hinge_2_2 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1906,7 +1939,7 @@ GameObject:
   - component: {fileID: 6577934193119288745}
   - component: {fileID: 7653821157876422250}
   - component: {fileID: 8758063912961715027}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1985,7 +2018,7 @@ GameObject:
   - component: {fileID: 1874226233732072455}
   - component: {fileID: 3927063556508827435}
   - component: {fileID: 6253024494025432231}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_18
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2062,7 +2095,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 483772447707976656}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2098,7 +2131,7 @@ GameObject:
   - component: {fileID: 1504944761115436801}
   - component: {fileID: 3449737648213515783}
   - component: {fileID: 359294354130187054}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCylinder81
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2177,7 +2210,7 @@ GameObject:
   - component: {fileID: 6536010511324025937}
   - component: {fileID: 6540642162932984359}
   - component: {fileID: 7989696892449621757}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2256,7 +2289,7 @@ GameObject:
   - component: {fileID: 3141481004181359537}
   - component: {fileID: 744236678378706756}
   - component: {fileID: 8049614564256076587}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_21
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2335,7 +2368,7 @@ GameObject:
   - component: {fileID: 4341344627941085180}
   - component: {fileID: 8962554541061795041}
   - component: {fileID: 6677949294919021233}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_22
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2414,7 +2447,7 @@ GameObject:
   - component: {fileID: 4404802616486498325}
   - component: {fileID: 3761209394044392833}
   - component: {fileID: 7184196847487497854}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2493,7 +2526,7 @@ GameObject:
   - component: {fileID: 4979843259391927776}
   - component: {fileID: 6471831295144619127}
   - component: {fileID: 3248864923450807039}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCylinder39
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2572,7 +2605,7 @@ GameObject:
   - component: {fileID: 2455424396558488754}
   - component: {fileID: 9054820872404563561}
   - component: {fileID: 5723554959879543996}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2649,7 +2682,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9003448582318946079}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2699,7 +2732,7 @@ GameObject:
   - component: {fileID: 6731206979577558290}
   - component: {fileID: 2051438421076697009}
   - component: {fileID: 5472858431061073758}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_24
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2778,7 +2811,7 @@ GameObject:
   - component: {fileID: 7022247385670735688}
   - component: {fileID: 7539475329222298643}
   - component: {fileID: 5657198650053089600}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston_body_1 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2857,7 +2890,7 @@ GameObject:
   - component: {fileID: 4693580470499315197}
   - component: {fileID: 8934480639116361389}
   - component: {fileID: 7228184522931691005}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_23
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2936,7 +2969,7 @@ GameObject:
   - component: {fileID: 4062817867315524683}
   - component: {fileID: 8091066950145389546}
   - component: {fileID: 8888884298339572891}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_37
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3015,7 +3048,7 @@ GameObject:
   - component: {fileID: 6214122339177085912}
   - component: {fileID: 1172264248751611983}
   - component: {fileID: 6942183433722451504}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_30
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3094,7 +3127,7 @@ GameObject:
   - component: {fileID: 8109479581252494944}
   - component: {fileID: 7911916719504540819}
   - component: {fileID: 2229329972218567203}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston_body_2 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3173,7 +3206,7 @@ GameObject:
   - component: {fileID: 9143697489399060827}
   - component: {fileID: 3485018556064220337}
   - component: {fileID: 7386911357286329911}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_36
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3252,7 +3285,7 @@ GameObject:
   - component: {fileID: 868332322927251155}
   - component: {fileID: 7586724652255512760}
   - component: {fileID: 747026002146337023}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_41
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3331,7 +3364,7 @@ GameObject:
   - component: {fileID: 6496761816780699821}
   - component: {fileID: 3890242443382520838}
   - component: {fileID: 1114258977144748537}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston_arm_2 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3408,7 +3441,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4510154124639567873}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3444,7 +3477,7 @@ GameObject:
   - component: {fileID: 2092543792204554236}
   - component: {fileID: 4381302308877548690}
   - component: {fileID: 6932726760393108469}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston_body_8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3523,7 +3556,7 @@ GameObject:
   - component: {fileID: 7535694816845685851}
   - component: {fileID: 6990951330916115590}
   - component: {fileID: 5358364147389831086}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3602,7 +3635,7 @@ GameObject:
   - component: {fileID: 8921848352523890644}
   - component: {fileID: 1705074400195092706}
   - component: {fileID: 5892775695282300478}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_17
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3681,7 +3714,7 @@ GameObject:
   - component: {fileID: 789304560399085779}
   - component: {fileID: 813888593670208285}
   - component: {fileID: 278708358693819924}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCube43
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3760,7 +3793,7 @@ GameObject:
   - component: {fileID: 3594688891088354928}
   - component: {fileID: 8706467674028869895}
   - component: {fileID: 3122654709153834269}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3839,7 +3872,7 @@ GameObject:
   - component: {fileID: 692525020680345846}
   - component: {fileID: 4293672877618688537}
   - component: {fileID: 11453102498964931}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3918,7 +3951,7 @@ GameObject:
   - component: {fileID: 639743086687382116}
   - component: {fileID: 1801231735028101272}
   - component: {fileID: 4166388619201109557}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_38
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3997,7 +4030,7 @@ GameObject:
   - component: {fileID: 6523000723352210329}
   - component: {fileID: 1511387571507632324}
   - component: {fileID: 2021312776941659059}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCylinder26
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4076,7 +4109,7 @@ GameObject:
   - component: {fileID: 3789694670957322927}
   - component: {fileID: 2273418628485274861}
   - component: {fileID: 4434447128924840589}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_26
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4155,7 +4188,7 @@ GameObject:
   - component: {fileID: 6737136435349830913}
   - component: {fileID: 647137009932357982}
   - component: {fileID: 8869476648895301602}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_32
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4234,7 +4267,7 @@ GameObject:
   - component: {fileID: 3477513578611485175}
   - component: {fileID: 5711463914573437948}
   - component: {fileID: 45624724724111045}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4313,7 +4346,7 @@ GameObject:
   - component: {fileID: 7855838375672796484}
   - component: {fileID: 7409922320139933526}
   - component: {fileID: 3444326462214421081}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_34
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4392,7 +4425,7 @@ GameObject:
   - component: {fileID: 2357022062522642518}
   - component: {fileID: 7439564579281594516}
   - component: {fileID: 8284722987695280408}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_39
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4471,7 +4504,7 @@ GameObject:
   - component: {fileID: 1922143341130147049}
   - component: {fileID: 8813020860776514434}
   - component: {fileID: 6464904012379402358}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4550,7 +4583,7 @@ GameObject:
   - component: {fileID: 5109889777442446588}
   - component: {fileID: 5087556586751347707}
   - component: {fileID: 6617488697305060521}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCube3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4629,7 +4662,7 @@ GameObject:
   - component: {fileID: 3213550391267985085}
   - component: {fileID: 2877555382258250916}
   - component: {fileID: 4538609848246095815}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCube7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4708,7 +4741,7 @@ GameObject:
   - component: {fileID: 3577695963769829643}
   - component: {fileID: 9145948557157430855}
   - component: {fileID: 3076083839331120417}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_25
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4787,7 +4820,7 @@ GameObject:
   - component: {fileID: 2969827584687534555}
   - component: {fileID: 5493754684188259150}
   - component: {fileID: 740104961218434847}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Track_case2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4866,7 +4899,7 @@ GameObject:
   - component: {fileID: 3692143826705806380}
   - component: {fileID: 4997022287613623864}
   - component: {fileID: 5570179574979456361}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCylinder38
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4945,7 +4978,7 @@ GameObject:
   - component: {fileID: 6742393711347062547}
   - component: {fileID: 7985664656294440266}
   - component: {fileID: 9001163346178207821}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_28
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5022,7 +5055,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2981703167084035143}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5057,7 +5090,7 @@ GameObject:
   - component: {fileID: 1208683033991120194}
   - component: {fileID: 5820119436422434386}
   - component: {fileID: 1141808240761746266}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_35
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5136,7 +5169,7 @@ GameObject:
   - component: {fileID: 3710002541325688535}
   - component: {fileID: 7321266082306513429}
   - component: {fileID: 3945629731075841786}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_29
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5215,7 +5248,7 @@ GameObject:
   - component: {fileID: 5129555098213222538}
   - component: {fileID: 353114970665779736}
   - component: {fileID: 3284799641738844290}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_40
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5294,7 +5327,7 @@ GameObject:
   - component: {fileID: 7225808869029986312}
   - component: {fileID: 73923492599697504}
   - component: {fileID: 2448784521522819320}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Piston_hinge_2_8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5373,7 +5406,7 @@ GameObject:
   - component: {fileID: 7003935591413876368}
   - component: {fileID: 7262166052901951675}
   - component: {fileID: 7011393906789929924}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TrackShape_Track1_Instancer_33
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5452,7 +5485,7 @@ GameObject:
   - component: {fileID: 1864997027518907190}
   - component: {fileID: 8635599275709383956}
   - component: {fileID: 464044046400628630}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCylinder40
   m_TagString: Untagged
   m_Icon: {fileID: 0}
