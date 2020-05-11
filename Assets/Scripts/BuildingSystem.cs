@@ -26,6 +26,7 @@ public class GridCell
 public class VagonGrid
 {
     public string gridName;
+    public bool isBuildable;
     public Vagon parentVagon; //store a link to the parent vagon script
     public GridType gridType;
     public GameObject gridHolder; //game object to store all drid objects in for organisation
@@ -105,7 +106,7 @@ public class BuildingSystem : MonoBehaviour
                 foreach (VagonGrid grid in vagon.Grids)
                 {
                     if (grid.gridType == CurrentTargetBuilding.gridType) grid.gridHolder.SetActive(true);
-                    else grid.gridHolder.SetActive(false);
+                    else if (grid.isBuildable) grid.gridHolder.SetActive(false);
                 }
             }
         }
@@ -119,7 +120,7 @@ public class BuildingSystem : MonoBehaviour
                 foreach (VagonGrid grid in vagon.Grids)
                 {
                     if (grid.gridType == CurrentTargetBuilding.gridType ) grid.gridHolder.SetActive(true);
-                    else grid.gridHolder.SetActive(false);
+                    else if (grid.isBuildable) grid.gridHolder.SetActive(false);
                 }
             }
         } //if called when isBuilding active and with a new grid building, check it's type
@@ -133,7 +134,7 @@ public class BuildingSystem : MonoBehaviour
             {
                 foreach (VagonGrid grid in vagon.Grids)
                 {
-                    grid.gridHolder.SetActive(false);
+                    if (grid.isBuildable) grid.gridHolder.SetActive(false);
                 }
             }
         } //if called when isBuilding already active and without passing a building, flip back to inactive state
@@ -285,7 +286,7 @@ public class BuildingSystem : MonoBehaviour
     {
         GridCell[] targetedGridArea = null;
 
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit targetHitPoint, MouseOrbitImproved.distance + 10f, 10) && targetHitPoint.transform.gameObject.tag == "RaycastTarget") //9 is the Vagons layer
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit targetHitPoint, MouseOrbitImproved.distance + 10f) && targetHitPoint.transform.gameObject.tag == "RaycastTarget") //9 is the Vagons layer
         {
             CapsuleCollider colCollider = (CapsuleCollider)targetHitPoint.collider;
             Vagon targetVagon = targetHitPoint.transform.gameObject.GetComponent<Vagon>();
@@ -297,7 +298,7 @@ public class BuildingSystem : MonoBehaviour
 
             foreach (VagonGrid grid in targetVagon.Grids)
             {
-                if (grid.gridType == CurrentGridType) targetGrid = grid;
+                if (grid.gridType == CurrentGridType && grid.isBuildable) targetGrid = grid;
             }
 
             if (targetGrid == null) return null; //stop if no grid found

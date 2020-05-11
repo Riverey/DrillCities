@@ -140,9 +140,190 @@ Transform:
   - {fileID: 462840908561913801}
   - {fileID: 7831557570341179563}
   - {fileID: 1173823408422221678}
+  - {fileID: 723415485473193803}
+  - {fileID: 4239041393824338145}
+  - {fileID: 6093546949663865768}
+  - {fileID: 4023519340053623885}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4473606208781387123
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6093546949663865768}
+  - component: {fileID: 8748509768307552011}
+  m_Layer: 0
+  m_Name: Building_module_Balcony
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6093546949663865768
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4473606208781387123}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.132, y: -0.127, z: -0.368}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6132117991576949956}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8748509768307552011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4473606208781387123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab834ed53fa5e814daec7a79d000102d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoSpawn: 1
+  respondToEthicsChange: 0
+  affectedByAngle: 0
+  emptySpawnChance: 2
+  variants:
+  - name: Balcony
+    objectModel: {fileID: 6006057203054304685, guid: 71a5a960a5f41c642a9160c4c69d71a1,
+      type: 3}
+    randomizeRotation: 0
+    spawnChanceModifier: 1
+  - name: Empty
+    objectModel: {fileID: 7260930203189440751, guid: 8d2cd7a57e9cbfc41a5a0ac9129d10e7,
+      type: 3}
+    randomizeRotation: 0
+    spawnChanceModifier: 3
+  isOccupied: 0
+--- !u!1 &5181764177214466050
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 723415485473193803}
+  - component: {fileID: 1286303380535792221}
+  m_Layer: 0
+  m_Name: Building_module_Window
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &723415485473193803
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5181764177214466050}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.203, y: 0.036, z: -0.259}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6132117991576949956}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1286303380535792221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5181764177214466050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab834ed53fa5e814daec7a79d000102d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoSpawn: 1
+  respondToEthicsChange: 0
+  affectedByAngle: 0
+  emptySpawnChance: 1
+  variants:
+  - name: Window_short
+    objectModel: {fileID: 232925363442992523, guid: 77a7289ba8f9063479f7cdc0bf0a22ba,
+      type: 3}
+    randomizeRotation: 0
+    spawnChanceModifier: 1
+  - name: Window_long
+    objectModel: {fileID: 4346825398401796839, guid: 7017db01e2f61b94aa21577be775b1b0,
+      type: 3}
+    randomizeRotation: 0
+    spawnChanceModifier: 1
+  isOccupied: 0
+--- !u!1 &5767522773202864930
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4239041393824338145}
+  - component: {fileID: 3584905467763907334}
+  m_Layer: 0
+  m_Name: Building_module_Window (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4239041393824338145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5767522773202864930}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.22, y: 0.036, z: -0.259}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6132117991576949956}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3584905467763907334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5767522773202864930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab834ed53fa5e814daec7a79d000102d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoSpawn: 1
+  respondToEthicsChange: 0
+  affectedByAngle: 0
+  emptySpawnChance: 1
+  variants:
+  - name: Window_short
+    objectModel: {fileID: 232925363442992523, guid: 77a7289ba8f9063479f7cdc0bf0a22ba,
+      type: 3}
+    randomizeRotation: 0
+    spawnChanceModifier: 1
+  - name: Window_long
+    objectModel: {fileID: 4346825398401796839, guid: 7017db01e2f61b94aa21577be775b1b0,
+      type: 3}
+    randomizeRotation: 0
+    spawnChanceModifier: 1
+  isOccupied: 0
 --- !u!1 &7520908801492483571
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,6 +432,65 @@ MonoBehaviour:
     randomizeRotation: 0
     spawnChanceModifier: 1
   isOccupied: 0
+--- !u!1 &8600064300234783539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4023519340053623885}
+  - component: {fileID: 660476905078920331}
+  m_Layer: 0
+  m_Name: Building_module_Vent
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4023519340053623885
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8600064300234783539}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.00000016391276}
+  m_LocalPosition: {x: -0.25, y: 0.301, z: -0.038}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6132117991576949956}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 180.00002, z: 0}
+--- !u!114 &660476905078920331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8600064300234783539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab834ed53fa5e814daec7a79d000102d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoSpawn: 1
+  respondToEthicsChange: 0
+  affectedByAngle: 0
+  emptySpawnChance: 2
+  variants:
+  - name: Balcony
+    objectModel: {fileID: 5480059265066078691, guid: 701ee54dfe82a1e489ed6a7bb9f431c7,
+      type: 3}
+    randomizeRotation: 0
+    spawnChanceModifier: 1
+  - name: Empty
+    objectModel: {fileID: 7260930203189440751, guid: 8d2cd7a57e9cbfc41a5a0ac9129d10e7,
+      type: 3}
+    randomizeRotation: 0
+    spawnChanceModifier: 3
+  isOccupied: 0
 --- !u!1001 &6138677756479855732
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -313,6 +553,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: f200165da8eeedd43a1305517ae7a7f7,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3e2805f3660deee47a52f7c617006d35, type: 2}
     - target: {fileID: -927199367670048503, guid: f200165da8eeedd43a1305517ae7a7f7,
         type: 3}
       propertyPath: m_Name

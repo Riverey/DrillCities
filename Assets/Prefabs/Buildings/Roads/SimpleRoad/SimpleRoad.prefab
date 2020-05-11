@@ -48,11 +48,14 @@ MonoBehaviour:
   gridType: 1
   gizmo: {fileID: 2571589805560224271, guid: 805513cd2bd15d344b8828266097490c, type: 3}
   angle: 0
+  cost: 20
   spawnedBuildingModules: []
   traverseSpeed: 1
   connectedBuildings: []
-  adjacentRoads: []
   crossings: []
+  perpendicularRoads: []
+  tangentRoads: []
+  elevator: {fileID: 0}
   crossingObject: {fileID: -8748685726805695412, guid: 2fbddad18729c8b4da52271b5743bab0,
     type: 3}
 --- !u!1001 &450254773350919611
@@ -70,7 +73,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 2684ac50507a3974c8205f435e047c76,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.015
+      value: 0.051
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 2684ac50507a3974c8205f435e047c76,
         type: 3}
@@ -117,6 +120,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 2684ac50507a3974c8205f435e047c76,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2da0a35bdfc4c0540b833e6dfab2e57e, type: 2}
     - target: {fileID: -927199367670048503, guid: 2684ac50507a3974c8205f435e047c76,
         type: 3}
       propertyPath: m_Name

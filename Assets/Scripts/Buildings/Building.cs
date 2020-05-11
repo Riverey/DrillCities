@@ -18,9 +18,31 @@ public class Building : GridBuilding
     [HideInInspector]
     public List<GridCell> blockedCrossings = new List<GridCell>();
 
+    public bool requiresAHole = false;
+
     private void Start()
     {
         SpawnInitialModules();
+
+        if (requiresAHole)
+        {
+            VagonGrid targetGrid = null;
+
+            foreach (VagonGrid grid in ParentGrid.parentVagon.Grids)
+            {
+                if (!grid.isBuildable && grid.gridName == "Hull")
+                {
+                    targetGrid = grid;
+                }
+            }
+            if (targetGrid != null)
+            {
+                foreach (GridCell cell in ParentCells)
+                {
+                    targetGrid.grid[(int)cell.coordinates.x, (int)cell.coordinates.y].cellGizmo.SetActive(false);
+                }
+            }
+        }
     }
 
     void SpawnInitialModules()

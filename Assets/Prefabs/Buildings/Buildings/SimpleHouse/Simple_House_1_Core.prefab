@@ -115,6 +115,7 @@ MonoBehaviour:
   gridType: 0
   gizmo: {fileID: 2571589805560224271, guid: d7e51613d27a367488b6892cfdd87472, type: 3}
   angle: 0
+  cost: 20
   spawnedBuildingModules: []
   size: {x: 3, y: 2}
   initialBuildingModulesPool:
@@ -130,6 +131,7 @@ MonoBehaviour:
   connectedRoads: []
   blockedRoads: []
   blockedCrossings: []
+  requiresAHole: 0
 --- !u!65 &7816710824249777465
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -141,7 +143,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3, y: 2, z: 2}
+  m_Size: {x: 2.6, y: 1, z: 1.7}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2327165125075959798
 MonoBehaviour:

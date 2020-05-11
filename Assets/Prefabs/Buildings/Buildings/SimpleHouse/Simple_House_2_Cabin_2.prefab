@@ -318,6 +318,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cabin_v2
       objectReference: {fileID: 0}
+    - target: {fileID: 5586821640661732521, guid: 027f302424171614c81d12d58ffd5676,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3e2805f3660deee47a52f7c617006d35, type: 2}
+    - target: {fileID: 7942737929118864188, guid: 027f302424171614c81d12d58ffd5676,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3e2805f3660deee47a52f7c617006d35, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 027f302424171614c81d12d58ffd5676, type: 3}
 --- !u!4 &1690872779435606673 stripped

@@ -166,7 +166,7 @@ public class Vagon : MonoBehaviour
             }
         } //spawning cells and storing them
 
-        grid.gridHolder.SetActive(false);
+        if (grid.isBuildable) grid.gridHolder.SetActive(false);
     }
 
     public void EraseGrid(VagonGrid grid)

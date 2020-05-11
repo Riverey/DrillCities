@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class UImanager : MonoBehaviour
 {
+    public AudioSource successResearch;
+
     public Image trainDiagramBody;
     public Image trainDiagramArrow;
 
@@ -88,7 +90,7 @@ public class UImanager : MonoBehaviour
             {
                 if (researchNode.researchButton.gameObject.activeSelf) researchNode.researchButton.interactable = false;
                 researchNode.buttonNumber.text = researchNode.cost.ToString();
-                if (ResourseManager.totalScience > researchNode.cost) researchNode.button.interactable = true;
+                if (ResourseManager.totalScience >= researchNode.cost) researchNode.button.interactable = true;
                 else { researchNode.button.interactable = false; }
             }
         }
